@@ -16,7 +16,7 @@ namespace GoldenArrow
         [STAThread]
         static void Main()
         {
-            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "Table", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "TimTest", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
                 game.Run();
         }
 
@@ -35,6 +35,7 @@ namespace GoldenArrow
                 {
                     { "Logo", () => new LogoScene() },
                     { "Table", () => new Table() },
+                    { "TimTest", () => new TimTestScene() }
                 });
         }
     }
