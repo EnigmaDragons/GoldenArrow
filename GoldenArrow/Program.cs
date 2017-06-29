@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GoldenArrow.Scenes;
 using Microsoft.Xna.Framework.Input;
 using MonoDragons.Core.EngimaDragons;
 using MonoDragons.Core.Engine;
@@ -16,7 +17,7 @@ namespace GoldenArrow
         [STAThread]
         static void Main()
         {
-            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "TimTest", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "MainMenu", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
                 game.Run();
         }
 
@@ -34,6 +35,7 @@ namespace GoldenArrow
                 new Dictionary<string, Func<IScene>>
                 {
                     { "Logo", () => new LogoScene() },
+                    { "MainMenu", () => new MainMenu() },
                     { "Table", () => new Table() },
                     { "TimTest", () => new TimTestScene() }
                 });

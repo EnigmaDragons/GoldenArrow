@@ -46,12 +46,13 @@ namespace MonoGame.Cards.Scenes
 
         }
 
-        private void RespondToMessagesAsClient(object peer)
+        private void RespondToMessagesAsClient()
         {
             NetIncomingMessage im;
             while ((im = _client.ReadMessage()) != null)
             {
-                RespondToMessage(im.ReadString());
+                if (im.MessageType == NetIncomingMessageType.Data)
+                    RespondToMessage(im.ReadString());
                 _client.Recycle(im);
             }
         }
@@ -102,7 +103,7 @@ namespace MonoGame.Cards.Scenes
         public void Update(TimeSpan delta)
         {
             if (ConnectedAsClient)
-                RespondToMessagesAsClient(0);
+                RespondToMessagesAsClient();
             if (ConnectedAsHost)
                 RespondToMessagesAsHost();
         }
