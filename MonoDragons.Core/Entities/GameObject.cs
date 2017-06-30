@@ -9,11 +9,13 @@ namespace MonoDragons.Core.Entities
         private readonly Map<Type, object> _components = new Map<Type, object>();
 
         public int Id { get; }
+        public bool IsEnabled { get; }
         public Transform2 Transform { get; }
 
         internal GameObject(int id, Transform2 transform)
         {
             Id = id;
+            IsEnabled = true;
             Transform = transform;
         }
 
@@ -59,7 +61,7 @@ namespace MonoDragons.Core.Entities
         public void With<T>(Action<T> action)
         {
             var type = typeof(T);
-            if (_components.ContainsKey(type))
+            if (IsEnabled && _components.ContainsKey(type))
                 action((T)_components[type]);
         }
     }
