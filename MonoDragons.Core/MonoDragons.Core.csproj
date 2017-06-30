@@ -92,6 +92,7 @@
     <Compile Include="MouseControls\MouseHover.cs" />
     <Compile Include="MouseControls\MouseSystems.cs" />
     <Compile Include="Navigation\INavigation.cs" />
+    <Compile Include="Scenes\EcsScene.cs" />
     <Compile Include="Scenes\IScene.cs" />
     <Compile Include="Engine\IAutomaton.cs" />
     <Compile Include="Engine\IVisual.cs" />
