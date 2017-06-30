@@ -41,5 +41,10 @@ namespace MonoDragons.Core.Networking
                 _client.Recycle(im);
             }
         }
+
+        public void Dispose()
+        {
+            _client.Shutdown("Disconnect requested.");
+        }
     }
 }
