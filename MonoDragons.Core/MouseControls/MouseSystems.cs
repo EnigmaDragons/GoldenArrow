@@ -6,7 +6,7 @@ namespace MonoDragons.Core.MouseControls
     {
         public static void RegisterAll(EntitySystem system)
         {
-            system.Register(new MouseClicking());
+            system.Register(new MouseStateProcessing());
             system.Register(new MouseDragging());
         }
     }

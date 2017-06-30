@@ -6,6 +6,7 @@ using MonoDragons.Core.EngimaDragons;
 using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
 using MonoDragons.Core.Inputs;
+using MonoDragons.Core.KeyboardControls;
 using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
@@ -19,9 +20,10 @@ namespace GoldenArrow
         [STAThread]
         static void Main()
         {
-            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "MainMenu", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "Typing", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
             {
                 MouseSystems.RegisterAll(Entity.System);
+                Entity.Register(new KeyboardInput());
                 game.Run();
             }
         }
@@ -41,7 +43,8 @@ namespace GoldenArrow
                 {
                     { "Logo", () => new LogoScene() },
                     { "MainMenu", () => new MainMenu() },
-                    { "Table", () => new Table() }
+                    { "Table", () => new Table() },
+                    { "Typing", () => new TypingScene() },
                 });
         }
     }

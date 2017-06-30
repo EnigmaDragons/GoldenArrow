@@ -11,7 +11,6 @@ namespace MonoDragons.Core.Networking
     public class PeerToPeerHost : INetworker
     {
         private static NetServer _server;
-        //private ConcurrentDictionary<long, string> _messages = new ConcurrentDictionary<long, string>();
         public Action<string> ReceivedCallback { get; set; } = (s) => { };
 
         public void Init(int port)
@@ -50,41 +49,5 @@ namespace MonoDragons.Core.Networking
             if(all.Count > 0)
                 _server.SendMessage(om, all, NetDeliveryMethod.ReliableOrdered, 0);
         }
-
-        /*public List<string> GetNewMessages()
-        {
-            var m = _messages;
-            _messages.Clear();
-            return m.Values.ToList();
-        }*/
-
-        /*private void Start(int port)
-        {
-            _server = new NetServer(new NetPeerConfiguration("chat") { Port = port });
-            _server.Start();
-            NetIncomingMessage im;
-            var i = 0;
-            while (true)
-            {
-                while ((im = _server.ReadMessage()) != null)
-                {
-                    if (im.MessageType == NetIncomingMessageType.Data)
-                    {
-                        var s = im.ReadString();
-                        _messages.TryAdd(i++, s);
-                        List<NetConnection> all = _server.Connections;
-                        all.Remove(im.SenderConnection);
-
-                        if (all.Count > 0)
-                        {
-                            NetOutgoingMessage message = _server.CreateMessage(s);
-                            _server.SendMessage(message, all, NetDeliveryMethod.ReliableOrdered, 0);
-                        }
-                    }
-                    _server.Recycle(im);
-                }
-                Thread.Sleep(1);
-            }
-        }*/
     }
 }
