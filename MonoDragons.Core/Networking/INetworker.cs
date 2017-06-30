@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace MonoDragons.Core.Networking
 {
-    public interface IMessenger
+    public interface INetworker
     {
+        Action<string> ReceivedCallback { get; set; }
         void Send(object item);
-        List<string> GetNewMessages { get; }
-        void Update(TimeSpan delta);
     }
 }

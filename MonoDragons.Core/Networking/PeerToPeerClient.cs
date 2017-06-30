@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using Lidgren.Network;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace MonoDragons.Core.Networking
 {
-    public class PeerToPeerClient : IMessenger
+    public class PeerToPeerClient : INetworker
     {
         private NetClient _client;
-        private List<string> _messages = new List<string>();
-        public List<string> GetNewMessages { get { var m = _messages; _messages.Clear(); return m; } }
+        public Action<string> ReceivedCallback { get; set; } = (s) => { };
 
-        public PeerToPeerClient(string url, int port)
+        public PeerToPeerClient()
         {
             _client = new NetClient(new NetPeerConfiguration("chat") { AutoFlushSendQueue = false });
         }
@@ -21,6 +21,7 @@ namespace MonoDragons.Core.Networking
             _client.Start();
             NetOutgoingMessage hail = _client.CreateMessage("This is the hail message");
             _client.Connect(url, port, hail);
+            _client.RegisterReceivedCallback(new SendOrPostCallback((a) => GetNewMessages()));
         }
         
         public void Send(object item)
@@ -30,13 +31,13 @@ namespace MonoDragons.Core.Networking
             _client.FlushSendQueue();
         }
 
-        public void Update(TimeSpan delta)
+        private void GetNewMessages()
         {
             NetIncomingMessage im;
             while ((im = _client.ReadMessage()) != null)
             {
                 if (im.MessageType == NetIncomingMessageType.Data)
-                    _messages.Add(im.ReadString());
+                    ReceivedCallback(im.ReadString());
                 _client.Recycle(im);
             }
         }
