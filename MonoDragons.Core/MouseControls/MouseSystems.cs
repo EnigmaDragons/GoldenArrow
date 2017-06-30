@@ -8,6 +8,7 @@ namespace MonoDragons.Core.MouseControls
         {
             system.Register(new MouseClicking());
             system.Register(new MouseDragging());
+            system.Register(new MouseHovering());
         }
     }
 }

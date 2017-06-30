@@ -90,7 +90,8 @@
     <Compile Include="MouseControls\MouseDownAction.cs" />
     <Compile Include="MouseControls\MouseDragging.cs" />
     <Compile Include="MouseControls\MouseClicking.cs" />
-    <Compile Include="MouseControls\MouseHover.cs" />
+    <Compile Include="MouseControls\HoverAction.cs" />
+    <Compile Include="MouseControls\MouseHovering.cs" />
     <Compile Include="MouseControls\MouseSystems.cs" />
     <Compile Include="Navigation\INavigation.cs" />
     <Compile Include="Networking\IMessenger.cs" />
