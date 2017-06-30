@@ -41,7 +41,11 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\CreateGame.cs" />
+    <Compile Include="Scenes\JoinGame.cs" />
     <Compile Include="Scenes\MainMenu.cs" />
+    <Compile Include="Scenes\SetupGame.cs" />
+    <Compile Include="Scenes\Lobby.cs" />
     <Compile Include="Scenes\TypingScene.cs" />
   </ItemGroup>
   <ItemGroup>

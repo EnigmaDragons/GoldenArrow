@@ -22,7 +22,7 @@ namespace GoldenArrow.Scenes
                 .Add(new Sprite("Images/Menu/", "startgame"))
                 .Add(x => new MouseStateActions
                 {
-                    OnReleased = () => NavigateToScene("Table"),
+                    OnReleased = () => NavigateToScene("Setup"),
                     OnHover = () => x.With<Sprite>(s => s.Name = "startgame-hover"),
                     OnPressed = () => x.With<Sprite>(s => s.Name = "startgame-pressed"),
                     OnExit = () => x.With<Sprite>(s => s.Name = "startgame"),
