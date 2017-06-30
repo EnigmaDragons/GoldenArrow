@@ -20,8 +20,13 @@ namespace GoldenArrow.Scenes
             yield return Entity
                 .Create(new Transform2(new Vector2(700, 650), new Size2(200, 90)))
                 .Add(new Sprite("Images/Menu/", "startgame"))
-                .Add(new ClickAction(() => NavigateToScene("Table")))
-                .Add(x => new HoverAction(() => x.With<Sprite>(s => s.Name = "startgame-hover"), () => x.With<Sprite>(s => s.Name = "startgame")));
+                .Add(x => new MouseStateActions
+                {
+                    OnReleased = () => NavigateToScene("Table"),
+                    OnHover = () => x.With<Sprite>(s => s.Name = "startgame-hover"),
+                    OnPressed = () => x.With<Sprite>(s => s.Name = "startgame-pressed"),
+                    OnExit = () => x.With<Sprite>(s => s.Name = "startgame"),
+                });
         }
     }
 }

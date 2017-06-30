@@ -26,6 +26,11 @@ namespace MonoDragons.Core.Entities
             _entities.ToList().ForEach(action);
         }
 
+        public void With<T>(Action<GameObject, T> action)
+        {
+            _entities.ToList().ForEach(o => o.With<T>(c => action(o, c)));
+        }
+
         public void Remove(GameObject gameObject)
         {
             _entities.Remove(gameObject);
