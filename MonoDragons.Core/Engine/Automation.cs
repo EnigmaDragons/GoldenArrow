@@ -7,7 +7,7 @@ namespace MonoDragons.Core.Engine
     {
         public void Update(IEntities entities, TimeSpan delta)
         {
-            entities.ForEach<IAutomaton>(x => x.Update(delta));
+            entities.With<IAutomaton>(x => x.Update(delta));
         }
     }
 }

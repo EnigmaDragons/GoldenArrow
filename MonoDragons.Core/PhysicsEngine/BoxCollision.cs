@@ -13,20 +13,18 @@ namespace MonoDragons.Core.PhysicsEngine
             var moving = GetMoving(entities);
             if (!moving.Any())
                 return;
-            entities.ForEach(
-                e => e.With<BoxCollider>(
-                    collider => moving.ForEach(x => x.If(!e.Equals(x), 
-                        () => StopIfWouldCollide(x, collider, delta)))));
+            entities.With<BoxCollider>(
+                (o, collider) => moving.ForEach(x => x.If(!o.Equals(x), 
+                    () => StopIfWouldCollide(x, collider, delta))));
         }
 
         private List<GameObject> GetMoving(IEntities entities)
         {
             var result = new List<GameObject>();
-            entities.ForEach(
-                e => e.With<BoxCollider>(
-                    solid => e.With<Motion2>(
-                        motion => motion.If(motion.Velocity.Speed > 0,
-                            () => result.Add(e)))));
+            entities.With<BoxCollider>(
+                (o, solid) => o.With<Motion2>(
+                    motion => motion.If(motion.Velocity.Speed > 0,
+                        () => result.Add(o))));
             return result;
         }
 

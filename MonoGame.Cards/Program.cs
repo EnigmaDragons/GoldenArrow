@@ -16,7 +16,7 @@ namespace MonoGame.Cards
         [STAThread]
         static void Main()
         {
-            using (var game = new NeedlesslyComplexMainGame("MonoGame.Cards", "Table", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            using (var game = new NeedlesslyComplexMainGame("MonoGame.Cards", "MainMenu", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
                 game.Run();
         }
 

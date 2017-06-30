@@ -16,7 +16,7 @@ namespace MonoDragons.Core.KeyboardControls
             Update(delta);
             var inputs = _newInputs.Copy();
             _newInputs.Clear();
-            entities.ForEach<TypingInput>(t => t.If(t.IsActive, () => ProcessAllInputs(inputs, t)));
+            entities.With<TypingInput>((o, t) => t.If(t.IsActive, () => ProcessAllInputs(inputs, t)));
         }
 
         private static void ProcessAllInputs(IEnumerable<string> inputs, TypingInput t)

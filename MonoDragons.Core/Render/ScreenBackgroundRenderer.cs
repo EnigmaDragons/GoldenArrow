@@ -7,8 +7,8 @@ namespace MonoDragons.Core.Render
     {
         public void Draw(IEntities entities)
         {
-            entities.ForEach(x => x.With<ScreenBackgroundColor>(
-                e => World.DrawBackgroundColor(e.Color)));
+            entities.With<ScreenBackgroundColor>(
+                e => World.DrawBackgroundColor(e.Color));
         }
     }
 }
