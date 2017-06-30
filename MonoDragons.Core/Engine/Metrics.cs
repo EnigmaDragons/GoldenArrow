@@ -68,7 +68,7 @@ namespace MonoDragons.Core.Engine
             if (_frameRateTroubleCount > 4)
             {
                 Debug.WriteLine("Framerate Exception: Exiting Program.");
-                Hack.TheGame.Exit();
+                //Hack.TheGame.Exit();
             }
         }
     }

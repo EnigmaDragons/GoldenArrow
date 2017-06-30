@@ -15,8 +15,8 @@ namespace MonoGame.Cards.Scenes
     {
         public void Init()
         {
-            Entity.Register(new MouseClicking());
-            Entity.Register(new MouseDragging());
+            //Entity.Register(new MouseClicking());
+            //Entity.Register(new MouseDragging());
 
             Entity.Create(new Transform2(new Size2(1920, 1080)))
                 .Add(new Sprite("Images/Table/casino-felt"));
