@@ -41,8 +41,7 @@ namespace GoldenArrow
                 {
                     { "Logo", () => new LogoScene() },
                     { "MainMenu", () => new MainMenu() },
-                    { "Table", () => new Table() },
-                    { "TimTest", () => new TimTestScene() }
+                    { "Table", () => new Table() }
                 });
         }
     }
