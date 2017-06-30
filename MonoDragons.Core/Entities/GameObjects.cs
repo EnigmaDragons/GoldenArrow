@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using MonoDragons.Core.Common;
+using MonoDragons.Core.Engine;
 using MonoDragons.Core.PhysicsEngine;
 
 namespace MonoDragons.Core.Entities
 {
     public sealed class GameObjects : IEntities
     {
-        private readonly List<GameObject> _entities = new List<GameObject>();
+        private readonly Map<int, GameObject> _entities = new Map<int, GameObject>();
 
         private int _nextId;
 
@@ -17,28 +18,34 @@ namespace MonoDragons.Core.Entities
         public GameObject Create(Transform2 transform)
         {
             var obj = new GameObject(_nextId++, transform);
-            _entities.Add(obj);
+            _entities.Add(obj.Id, obj);
             return obj;
         }
 
         public void ForEach(Action<GameObject> action)
         {
-            _entities.ToList().ForEach(action);
+            _entities.ToList().ForEach(e => action(e.Value));
         }
 
         public void With<T>(Action<GameObject, T> action)
         {
-            _entities.ToList().ForEach(o => o.With<T>(c => action(o, c)));
+            _entities.Values.ToList().ForEach(o => o.With<T>(c => action(o, c)));
         }
 
         public void Remove(GameObject gameObject)
         {
-            _entities.Remove(gameObject);
+            _entities.Remove(gameObject.Id);
         }
 
         public void Remove(IEnumerable<GameObject> objs)
         {
-            objs.ForEach(x => _entities.Remove(x));
+            objs.ForEach(x => _entities.Remove(x.Id));
+        }
+
+        public void With<T>(int entityId, Action<GameObject, T> action)
+        {
+            var obj = _entities[entityId];
+            obj.With<T>(t => action(obj, t));
         }
     }
 }
