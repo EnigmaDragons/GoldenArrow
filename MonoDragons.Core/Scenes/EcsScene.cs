@@ -22,6 +22,11 @@ namespace MonoDragons.Core.Scenes
             _objs.AddRange(CreateObjs());
         }
 
+        protected void AddObj(GameObject obj)
+        {
+            _objs.Add(obj);
+        }
+
         public void Update(TimeSpan delta)
         {
         }
