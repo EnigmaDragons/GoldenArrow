@@ -37,7 +37,7 @@ namespace MonoDragons.Core.MouseControls
 
             // TODO: Kill this
             if (LeftMouseButtonJustPressed)
-                entities.ForEach(e => e.With<MouseDownAction>(t => e.Transform.If(x => x.Intersects(pos), () => t.Action())));
+                entities.With<MouseDownAction>((o, t) => o.Transform.If(x => x.Intersects(pos), () => t.Action()));
 
             _leftWasPressed = LeftIsPressed;
             _lastPos = pos;

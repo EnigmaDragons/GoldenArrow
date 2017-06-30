@@ -34,7 +34,7 @@ namespace MonoDragons.Core.MouseControls
         private void SelectDragTarget(IEntities entities)
         {
             var possibleTargets = new List<GameObject>();
-            entities.ForEach(e => e.With<MouseDrag>(x => e.Transform.If(t => t.Intersects(_lastPos), t => possibleTargets.Add(e))));
+            entities.With<MouseDrag>((o, m) => o.Transform.If(t => t.Intersects(_lastPos), t => possibleTargets.Add(o)));
             if (possibleTargets.Any())
                 _targets.Add(possibleTargets.OrderByDescending(x => x.Transform.ZIndex).First());
         }

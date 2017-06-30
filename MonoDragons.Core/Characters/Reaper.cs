@@ -7,10 +7,9 @@ namespace MonoDragons.Core.Characters
     {
         public void Update(IEntities entities, TimeSpan delta)
         {
-            entities.ForEach(
-                (entity) => entity.With<Mortal>(
-                    (mortal) => entity.With<Health>(
-                        (health) => { if (health.HP < 1) mortal.OnDeath(); })));
+            entities.With<Mortal>(
+                (o, mortal) => o.With<Health>(
+                    (health) => { if (health.HP < 1) mortal.OnDeath(); }));
         }
     }
 }

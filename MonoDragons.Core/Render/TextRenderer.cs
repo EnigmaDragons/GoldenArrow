@@ -7,9 +7,8 @@ namespace MonoDragons.Core.Render
     {
         public void Draw(IEntities entities)
         {
-            entities.ForEach(
-                e => e.With<TextDisplay>(
-                    text => UI.DrawTextCentered(text.Text(), e.Transform.ToRectangle(), text.Color, text.Font)));
+            entities.With<TextDisplay>(
+                    (o, text) => UI.DrawTextCentered(text.Text(), o.Transform.ToRectangle(), text.Color, text.Font));
         }
     }
 }

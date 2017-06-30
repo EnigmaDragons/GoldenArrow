@@ -37,10 +37,5 @@ namespace GoldenArrow.Scenes
                     OnExit = () => x.With<Texture>(s => s.Value = new RectangleTexture(200, 70, Color.DarkRed).Create()),
                 });
         }
-
-        private GameObject CreateGameModal()
-        {
-            
-        }
     }
 }

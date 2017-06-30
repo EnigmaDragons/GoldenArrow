@@ -18,9 +18,8 @@ namespace MonoDragons.Core.Inputs
         public void Update(IEntities entities, TimeSpan delta)
         {
             _unprocessedControls.ForEach(
-                ctrl => entities.ForEach(
-                    e => e.With<Controls>(
-                        ctrls => ctrls.OnControl(ctrl))));
+                ctrl => entities.With<Controls>(
+                   (o, ctrls) => ctrls.OnControl(ctrl)));
             _unprocessedControls.Clear();
         }
 

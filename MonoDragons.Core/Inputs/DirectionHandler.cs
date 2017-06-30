@@ -18,9 +18,8 @@ namespace MonoDragons.Core.Inputs
 
         public void Update(IEntities entities, TimeSpan delta)
         {
-            entities.ForEach(
-                (e) => e.With<Directable>(
-                    (d) => d.Binding(_unprocessedDirection)));
+            entities.With<Directable>(
+                    (o, d) => d.Binding(_unprocessedDirection));
         }
 
         private void DirectionChanged(Direction direction)
