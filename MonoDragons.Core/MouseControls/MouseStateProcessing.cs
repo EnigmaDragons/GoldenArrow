@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoDragons.Core.Common;
-using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
 
 namespace MonoDragons.Core.MouseControls
@@ -20,11 +17,7 @@ namespace MonoDragons.Core.MouseControls
         private bool MouseUp => _state.LeftButton == ButtonState.Released;
         private bool LeftMouseButtonJustPressed => !_leftWasPressed && LeftIsPressed;
         public bool LeftMouseButtonJustReleased => _leftWasPressed && !LeftIsPressed;
-
-        public MouseStateProcessing()
-        {
-        }
-
+        
         public void Update(IEntities entities, TimeSpan delta)
         {
             _state = Mouse.GetState();
@@ -49,6 +42,5 @@ namespace MonoDragons.Core.MouseControls
             _leftWasPressed = LeftIsPressed;
             _lastPos = pos;
         }
-
     }
 }

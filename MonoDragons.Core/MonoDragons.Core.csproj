@@ -98,6 +98,8 @@
     <Compile Include="Networking\IMessenger.cs" />
     <Compile Include="Networking\PeerToPeerClient.cs" />
     <Compile Include="Networking\PeerToPeerHost.cs" />
+    <Compile Include="Render\Texture.cs" />
+    <Compile Include="Render\TextureRenderer.cs" />
     <Compile Include="Scenes\EcsScene.cs" />
     <Compile Include="Scenes\IScene.cs" />
     <Compile Include="Engine\IAutomaton.cs" />
