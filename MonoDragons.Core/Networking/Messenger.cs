@@ -16,24 +16,24 @@ namespace MonoDragons.Core.Networking
         private List<Message> OutOfOrderMessages = new List<Message>();
         private List<object> UnsentMessages = new List<object>();
 
-        public Messenger()
+        private Messenger(INetworker networker)
         {
+            _messenger = networker;
+            _messenger.ReceivedCallback = ReceivedMessage;
         }
 
-        public void InitAsClient(string url, int port)
+        public static Messenger CreateClient(string url, int port)
         {
             var messenger = new PeerToPeerClient();
             messenger.Init(url, port);
-            _messenger = messenger;
-            _messenger.ReceivedCallback = ReceivedMessage;
+            return new Messenger(messenger);
         }
         
-        public void InitAsHost(int port)
+        public static Messenger CreateHost(int port)
         {
             var messenger = new PeerToPeerHost();
             messenger.Init(port);
-            _messenger = messenger;
-            _messenger.ReceivedCallback = ReceivedMessage;
+            return new Messenger(messenger);
         }
 
         public void Send(object item)
