@@ -1,14 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MonoGame.Cards.Cards;
-
+﻿
 namespace MonoGame.Cards.Hands
 {
     public class Hand
     {
-        private readonly List<Card> _cards = new List<Card>();
+        private readonly HandData _data;
+
+        public Hand(HandData data)
+        {
+            _data = data;
+        }
+
+        public void Add(string card)
+        {
+            _data.Cards.Add(card);
+        }
+
+        public void Remove(string card)
+        {
+            _data.Cards.Remove(card);
+        }
     }
 }

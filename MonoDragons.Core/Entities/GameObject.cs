@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using MonoDragons.Core.Engine;
 using MonoDragons.Core.PhysicsEngine;
 
