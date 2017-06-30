@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Lidgren.Network;
 using Newtonsoft.Json;
-using MonoDragons.Core.Common;
-using MonoDragons.Core.Engine;
 
 namespace MonoDragons.Core.Networking
 {

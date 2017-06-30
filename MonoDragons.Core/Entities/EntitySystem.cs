@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using MonoDragons.Core.Common;
 
 namespace MonoDragons.Core.Entities
 {
     public sealed class EntitySystem : IEntitySystemRegistration
     {
-        private readonly List<ISystem> _systems = new List<ISystem>();
-        private readonly List<IRenderer> _renderers = new List<IRenderer>();
+        private readonly HashSet<ISystem> _systems = new HashSet<ISystem>();
+        private readonly HashSet<IRenderer> _renderers = new HashSet<IRenderer>();
         private readonly IEntities _entities;
 
         public EntitySystem(IEntities entities)

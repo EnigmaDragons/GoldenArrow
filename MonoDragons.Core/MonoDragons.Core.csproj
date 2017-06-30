@@ -90,10 +90,13 @@
     <Compile Include="MouseControls\MouseDownAction.cs" />
     <Compile Include="MouseControls\MouseDragging.cs" />
     <Compile Include="MouseControls\MouseClicking.cs" />
+    <Compile Include="MouseControls\MouseHover.cs" />
+    <Compile Include="MouseControls\MouseSystems.cs" />
     <Compile Include="Navigation\INavigation.cs" />
     <Compile Include="Networking\IMessenger.cs" />
     <Compile Include="Networking\PeerToPeerClient.cs" />
     <Compile Include="Networking\PeerToPeerHost.cs" />
+    <Compile Include="Scenes\EcsScene.cs" />
     <Compile Include="Scenes\IScene.cs" />
     <Compile Include="Engine\IAutomaton.cs" />
     <Compile Include="Engine\IVisual.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MonoDragons.Core.Common;
 using MonoDragons.Core.PhysicsEngine;
 
 namespace MonoDragons.Core.Entities
@@ -28,6 +29,11 @@ namespace MonoDragons.Core.Entities
         public void Remove(GameObject gameObject)
         {
             _entities.Remove(gameObject);
+        }
+
+        public void Remove(IEnumerable<GameObject> objs)
+        {
+            objs.ForEach(x => _entities.Remove(x));
         }
     }
 }

@@ -1,34 +1,26 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoDragons.Core.Entities;
+using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.PhysicsEngine;
 using MonoDragons.Core.Scenes;
 
 namespace GoldenArrow.Scenes
 {
-    public class MainMenu : IScene
+    public class MainMenu : EcsScene
     {
-        public static void Create()
+        protected override IEnumerable<GameObject> CreateObjs()
         {
-            var background = Entity
-                .Create(new Transform2(new Size2(1600, 900)))
-                .Add(new Sprite("Images/Menu/mainmenu"));
-            var title = Entity
+            yield return Entity
+               .Create(new Transform2(new Size2(1600, 900)))
+               .Add(new Sprite("Images/Menu/mainmenu"));
+            yield return Entity
                 .Create(new Transform2(new Vector2(300, 90), new Size2(1000, 171)))
                 .Add(new Sprite("Images/Menu/maintitle"));
-        }
-
-        public void Init()
-        {
-            Create();
-        }
-
-        public void Update(TimeSpan delta)
-        {
-        }
-
-        public void Draw()
-        {
+            yield return Entity
+                .Create(new Transform2(new Vector2(700, 650), new Size2(200, 90)))
+                .Add(new Sprite("Images/Menu/startgame"))
+                .Add(new ClickAction(() => NavigateToScene("Table")));
         }
     }
 }

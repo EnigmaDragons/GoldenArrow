@@ -4,7 +4,9 @@ using GoldenArrow.Scenes;
 using Microsoft.Xna.Framework.Input;
 using MonoDragons.Core.EngimaDragons;
 using MonoDragons.Core.Engine;
+using MonoDragons.Core.Entities;
 using MonoDragons.Core.Inputs;
+using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
 using MonoGame.Cards.Scenes;
@@ -18,7 +20,10 @@ namespace GoldenArrow
         static void Main()
         {
             using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "MainMenu", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            {
+                MouseSystems.RegisterAll(Entity.System);
                 game.Run();
+            }
         }
 
         private static IController CreateController()
