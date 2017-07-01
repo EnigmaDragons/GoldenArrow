@@ -2,7 +2,7 @@
 
 namespace MonoDragons.Core.MouseControls
 {
-    public class MouseStateActions
+    public sealed class MouseStateActions
     {
         public MouseState CurrentState { get; set; } = MouseState.None;
         public DateTime ClickedAt { get; set; } = DateTime.MinValue;

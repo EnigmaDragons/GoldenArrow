@@ -37,7 +37,7 @@ namespace MonoGame.Cards.Scenes
             Entity.Create(new Transform2(location, Sizes.Card))
                 .Add(card.Sprite)
                 .Add(new MouseDrag())
-                .Add(x => new MouseStateActions { OnPressed = () => card.Flip() });
+                .Add(x => new MouseStateActions { OnReleased = () => card.Flip() });
         }
 
         public void Update(TimeSpan delta)

@@ -87,10 +87,13 @@
     <Compile Include="IO\AppDataJsonIo.cs" />
     <Compile Include="KeyboardControls\KeyboardInput.cs" />
     <Compile Include="KeyboardControls\TypingInput.cs" />
+    <Compile Include="MouseControls\MouseClickTarget.cs" />
+    <Compile Include="MouseControls\MouseSnapshot.cs" />
     <Compile Include="MouseControls\MouseButton.cs" />
+    <Compile Include="MouseControls\MouseClicking.cs" />
+    <Compile Include="MouseControls\MouseClickListener.cs" />
     <Compile Include="MouseControls\MouseDragging.cs" />
     <Compile Include="MouseControls\MouseStateProcessing.cs" />
-    <Compile Include="MouseControls\HoverAction.cs" />
     <Compile Include="MouseControls\MouseState.cs" />
     <Compile Include="MouseControls\MouseStateActions.cs" />
     <Compile Include="MouseControls\MouseSystems.cs" />

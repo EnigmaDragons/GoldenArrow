@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoDragons.Core.Entities;
 using MonoDragons.Core.KeyboardControls;
+using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.PhysicsEngine;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
@@ -15,11 +16,22 @@ namespace GoldenArrow.Scenes
             yield return Entity
                 .Create(new Transform2(new Size2(200, 100)))
                 .Add(new TypingInput { IsActive = true })
-                .Add(x => new TextDisplay {Text = () => x.Get<TypingInput>().Value});
+                .Add(x => new TextDisplay {Text = () => x.Get<TypingInput>().Value})
+                .Add(x => new MouseClickTarget
+                {
+                    OnHit = () => x.With<TypingInput>(t => t.IsActive = true), 
+                    OnMiss = () => x.With<TypingInput>(t => t.IsActive = false)
+                });
+
             yield return Entity
                 .Create(new Transform2(new Vector2(300, 0), new Size2(200, 100)))
                 .Add(new TypingInput())
-                .Add(x => new TextDisplay { Text = () => x.Get<TypingInput>().Value });
+                .Add(x => new TextDisplay { Text = () => x.Get<TypingInput>().Value })
+                .Add(x => new MouseClickTarget
+                {
+                    OnHit = () => x.With<TypingInput>(t => t.IsActive = true),
+                    OnMiss = () => x.With<TypingInput>(t => t.IsActive = false)
+                });
         }
     }
 }
