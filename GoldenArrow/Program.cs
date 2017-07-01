@@ -46,6 +46,7 @@ namespace GoldenArrow
                     { "Table", () => new Table() },
                     { "Setup", () => new SetupGame() },
                     { "Typing", () => new TypingScene() },
+                    { "Join", () => new JoinGame() },
                 });
         }
     }
