@@ -54,6 +54,7 @@
     <Compile Include="Engine\ISpatialVisualControl.cs" />
     <Compile Include="Engine\IVisualControl.cs" />
     <Compile Include="Entities\EntitiesExtensions.cs" />
+    <Compile Include="Graphics\RectangleBorderTexture.cs" />
     <Compile Include="Inputs\Controls.cs" />
     <Compile Include="Characters\Health.cs" />
     <Compile Include="Characters\Mortal.cs" />
@@ -103,6 +104,8 @@
     <Compile Include="Networking\Messenger.cs" />
     <Compile Include="Networking\PeerToPeerClient.cs" />
     <Compile Include="Networking\PeerToPeerHost.cs" />
+    <Compile Include="Render\BorderRenderer.cs" />
+    <Compile Include="Render\BorderTexture.cs" />
     <Compile Include="Render\Texture.cs" />
     <Compile Include="Render\TextureRenderer.cs" />
     <Compile Include="Scenes\EcsScene.cs" />

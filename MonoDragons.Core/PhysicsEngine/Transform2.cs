@@ -10,7 +10,7 @@ namespace MonoDragons.Core.PhysicsEngine
         public Rotation2 Rotation { get; set;}
         public float Scale { get; set; }
         public Size2 Size { get; set; }
-        public int ZIndex { get; set; } = 0;
+        public int ZIndex { get; set; }
 
         public Transform2(Rectangle rectangle)
             : this(new Vector2(rectangle.Location.X, rectangle.Location.Y), new Size2(rectangle.Size.X, rectangle.Size.Y)) { }
