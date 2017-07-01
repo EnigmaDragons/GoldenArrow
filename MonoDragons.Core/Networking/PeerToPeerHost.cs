@@ -49,5 +49,10 @@ namespace MonoDragons.Core.Networking
             if(all.Count > 0)
                 _server.SendMessage(om, all, NetDeliveryMethod.ReliableOrdered, 0);
         }
+
+        public void Dispose()
+        {
+            _server.Shutdown("Server Shutdown");
+        }
     }
 }

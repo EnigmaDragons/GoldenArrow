@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using MonoDragons.Core.Audio;
 using MonoDragons.Core.Entities;
 using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.PhysicsEngine;
@@ -13,7 +14,8 @@ namespace GoldenArrow.Scenes
         {
             yield return Entity
                .Create(new Transform2(new Size2(1600, 900)))
-               .Add(new Sprite("Images/Menu/", "mainmenu"));
+               .Add(new Sprite("Images/Menu/", "mainmenu"))
+               .Add(new BackgroundMusic("Music/maintheme"));
             yield return Entity
                 .Create(new Transform2(new Vector2(300, 90), new Size2(1000, 171)))
                 .Add(new Sprite("Images/Menu/", "maintitle"));

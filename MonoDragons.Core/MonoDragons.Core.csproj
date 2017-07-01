@@ -45,15 +45,22 @@
   <ItemGroup>
     <Compile Include="Audio\Audio.cs" />
     <Compile Include="Audio\AudioPlaybackEngine.cs" />
+    <Compile Include="Audio\BackgroundMusic.cs" />
     <Compile Include="Audio\DisposingFileReader.cs" />
     <Compile Include="Audio\LoopingFileReader.cs" />
     <Compile Include="Audio\DampeningSampleProvider.cs" />
+    <Compile Include="Audio\MusicPlayer.cs" />
+    <Compile Include="Audio\Sound.cs" />
+    <Compile Include="Audio\Sounds.cs" />
+    <Compile Include="Audio\SoundsPlayer.cs" />
+    <Compile Include="Audio\SoundSystems.cs" />
     <Compile Include="Engine\Automation.cs" />
     <Compile Include="Engine\IControl.cs" />
     <Compile Include="Engine\ISpatialVisual.cs" />
     <Compile Include="Engine\ISpatialVisualControl.cs" />
     <Compile Include="Engine\IVisualControl.cs" />
     <Compile Include="Entities\EntitiesExtensions.cs" />
+    <Compile Include="Graphics\RectangleBorderTexture.cs" />
     <Compile Include="Inputs\Controls.cs" />
     <Compile Include="Characters\Health.cs" />
     <Compile Include="Characters\Mortal.cs" />
@@ -87,12 +94,13 @@
     <Compile Include="IO\AppDataJsonIo.cs" />
     <Compile Include="KeyboardControls\KeyboardInput.cs" />
     <Compile Include="KeyboardControls\TypingInput.cs" />
-    <Compile Include="MouseControls\ClickAction.cs" />
+    <Compile Include="MouseControls\MouseClickTarget.cs" />
+    <Compile Include="MouseControls\MouseSnapshot.cs" />
     <Compile Include="MouseControls\MouseButton.cs" />
-    <Compile Include="MouseControls\MouseDownAction.cs" />
+    <Compile Include="MouseControls\MouseClicking.cs" />
+    <Compile Include="MouseControls\MouseClickListener.cs" />
     <Compile Include="MouseControls\MouseDragging.cs" />
     <Compile Include="MouseControls\MouseStateProcessing.cs" />
-    <Compile Include="MouseControls\HoverAction.cs" />
     <Compile Include="MouseControls\MouseState.cs" />
     <Compile Include="MouseControls\MouseStateActions.cs" />
     <Compile Include="MouseControls\MouseSystems.cs" />
@@ -102,6 +110,8 @@
     <Compile Include="Networking\Messenger.cs" />
     <Compile Include="Networking\PeerToPeerClient.cs" />
     <Compile Include="Networking\PeerToPeerHost.cs" />
+    <Compile Include="Render\BorderRenderer.cs" />
+    <Compile Include="Render\BorderTexture.cs" />
     <Compile Include="Render\Texture.cs" />
     <Compile Include="Render\TextureRenderer.cs" />
     <Compile Include="Scenes\EcsScene.cs" />
@@ -165,6 +175,7 @@
     <Compile Include="Render\TextRenderer.cs" />
     <Compile Include="Text\IWrapText.cs" />
     <Compile Include="Text\EnumExtensions.cs" />
+    <Compile Include="Text\TextAlign.cs" />
     <Compile Include="Text\WrappingText.cs" />
     <Compile Include="UserInterface\Graphs\Graph.cs" />
     <Compile Include="UserInterface\Graphs\GraphDefaults.cs" />
@@ -255,6 +266,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Music\mute.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\missingsound.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

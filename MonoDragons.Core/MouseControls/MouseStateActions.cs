@@ -2,7 +2,7 @@
 
 namespace MonoDragons.Core.MouseControls
 {
-    public class MouseStateActions
+    public sealed class MouseStateActions
     {
         public MouseState CurrentState { get; set; } = MouseState.None;
         public DateTime ClickedAt { get; set; } = DateTime.MinValue;
@@ -20,7 +20,7 @@ namespace MonoDragons.Core.MouseControls
 
         public void Exit()
         {
-            if(CurrentState != MouseState.None)
+            if (CurrentState != MouseState.None)
                 OnExit();
             CurrentState = MouseState.None;
         }
@@ -37,7 +37,7 @@ namespace MonoDragons.Core.MouseControls
             OnHover();
             if ((DateTime.Now - ClickedAt).Milliseconds < 150)
                 OnReleased();
-            CurrentState = MouseState.None;
+            CurrentState = MouseState.Hovered;
         }
     }
 }

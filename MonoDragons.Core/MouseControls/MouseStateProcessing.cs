@@ -8,39 +8,23 @@ namespace MonoDragons.Core.MouseControls
 {
     public sealed class MouseStateProcessing : ISystem
     {
-        private Microsoft.Xna.Framework.Input.MouseState _state;
-        private Point _lastPos;
-        private bool _leftWasPressed;
-
-        // @todo #1 Add support for other Mouse Button Clicks
-        private bool LeftIsPressed => _state.LeftButton == ButtonState.Pressed;
-        private bool MouseUp => _state.LeftButton == ButtonState.Released;
-        private bool LeftMouseButtonJustPressed => !_leftWasPressed && LeftIsPressed;
-        public bool LeftMouseButtonJustReleased => _leftWasPressed && !LeftIsPressed;
+        private MouseSnapshot _mouse = new MouseSnapshot();
         
         public void Update(IEntities entities, TimeSpan delta)
         {
-            _state = Mouse.GetState();
-            var pos = _state.Position;
+            _mouse = _mouse.Current();
 
             entities.With<MouseStateActions>((o, m) =>
             {
-                if (!o.Transform.Intersects(pos))
+                if (!o.Transform.Intersects(_mouse.Position))
                     m.Exit();
-                else if (!o.Transform.Intersects(_lastPos))
+                else if (!o.Transform.Intersects(_mouse.LastPosition))
                     m.Hover();
-                else if (LeftMouseButtonJustPressed)
+                else if (_mouse.ButtonJustPressed)
                     m.Click();
-                else if (LeftMouseButtonJustReleased)
+                else if (_mouse.ButtonJustReleased)
                     m.Release();
             });
-
-            // TODO: Kill this
-            if (LeftMouseButtonJustPressed)
-                entities.With<MouseDownAction>((o, t) => o.Transform.If(x => x.Intersects(pos), () => t.Action()));
-
-            _leftWasPressed = LeftIsPressed;
-            _lastPos = pos;
         }
     }
 }

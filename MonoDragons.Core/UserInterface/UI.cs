@@ -5,18 +5,17 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoDragons.Core.Memory;
 using MonoDragons.Core.PhysicsEngine;
 using MonoDragons.Core.Text;
-using MonoDragons.Core.Engine;
 using MonoDragons.Core.Render;
 
 namespace MonoDragons.Core.UserInterface
 {
     public static class UI
     {
-        private static readonly Dictionary<HorizontalAlignment, Func<Rectangle, Vector2, Vector2>> _alignPositions = new Dictionary<HorizontalAlignment, Func<Rectangle, Vector2, Vector2>>
+        private static readonly Dictionary<TextAlign, Func<Rectangle, Vector2, Vector2>> _alignPositions = new Dictionary<TextAlign, Func<Rectangle, Vector2, Vector2>>
         {
-            { HorizontalAlignment.Left, GetLeftPosition },
-            { HorizontalAlignment.Center, GetCenterPosition },
-            { HorizontalAlignment.Right, GetRightPosition },
+            { TextAlign.Left, GetLeftPosition },
+            { TextAlign.Center, GetCenterPosition },
+            { TextAlign.Right, GetRightPosition },
         };
 
         private static Game _game;
@@ -78,6 +77,13 @@ namespace MonoDragons.Core.UserInterface
                 0, Vector2.Zero, _display.Scale, SpriteEffects.None, 1);
         }
 
+        public static void DrawText(string text, Vector2 position, Color color, string font, TextAlign alignment)
+        {
+            var spriteFont = Resources.Load<SpriteFont>(font);
+            _spriteBatch.DrawString(spriteFont, text, ScalePoint(position.X, position.Y).ToVector2(), color,
+                0, Vector2.Zero, _display.Scale, SpriteEffects.None, 1);
+        }
+
         public static void DrawTextCentered(string text, Rectangle area, Color color)
         {
             DrawTextCentered(text, area, color, DefaultFont.Name);
@@ -85,25 +91,25 @@ namespace MonoDragons.Core.UserInterface
         
         public static void DrawTextCentered(string text, Rectangle area, Color color, string font)
         {
-            DrawTextAligned(text, area, color, font, HorizontalAlignment.Center);
+            DrawTextAligned(text, area, color, font, TextAlign.Center);
         }
 
         public static void DrawTextLeft(string text, Rectangle area, Color color, string font)
         {
-            DrawTextAligned(text, area, color, font, HorizontalAlignment.Left);
+            DrawTextAligned(text, area, color, font, TextAlign.Left);
         }
 
         public static void DrawTextRight(string text, Rectangle area, Color color, string font)
         {
-            DrawTextAligned(text, area, color, font, HorizontalAlignment.Right);
+            DrawTextAligned(text, area, color, font, TextAlign.Right);
         }
 
-        public static void DrawTextAligned(string text, Rectangle area, Color color, string font, HorizontalAlignment horizontalAlignment)
+        public static void DrawTextAligned(string text, Rectangle area, Color color, string font, TextAlign align)
         {
             var spriteFont = Resources.Load<SpriteFont>(font);
             var wrapped = new WrappingText(() => spriteFont, () => area.Width).Wrap(text);
             var size = spriteFont.MeasureString(wrapped);
-            DrawText(wrapped, _alignPositions[horizontalAlignment](area, size), color, font);
+            DrawText(wrapped, _alignPositions[align](area, size), color, font);
         } 
 
         private static Vector2 GetLeftPosition(Rectangle area, Vector2 size)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GoldenArrow.Scenes;
 using Microsoft.Xna.Framework.Input;
+using MonoDragons.Core.Audio;
 using MonoDragons.Core.EngimaDragons;
 using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
@@ -23,6 +24,7 @@ namespace GoldenArrow
             using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "MainMenu", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
             {
                 MouseSystems.RegisterAll(Entity.System);
+                SoundSystems.RegisterAll(Entity.System);
                 Entity.Register(new KeyboardInput());
                 game.Run();
             }

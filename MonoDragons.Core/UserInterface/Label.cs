@@ -15,7 +15,7 @@ namespace MonoDragons.Core.UserInterface
 
         public string Font { get; set; } = DefaultFont.Name;
         public Color TextColor { get; set; } = Color.White;
-        public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
+        public TextAlign HorizontalAlignment { get; set; } = TextAlign.Center;
 
         public Transform2 Transform
         {

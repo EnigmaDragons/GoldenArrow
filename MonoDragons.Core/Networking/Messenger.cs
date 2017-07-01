@@ -9,31 +9,31 @@ using System.Threading.Tasks;
 
 namespace MonoDragons.Core.Networking
 {
-    public class Messenger
+    public class Messenger : IDisposable
     {
-        private INetworker _messenger;
+        private INetworker _networker;
         private List<Message> messageHistory = new List<Message>();
         private List<Message> OutOfOrderMessages = new List<Message>();
         private List<object> UnsentMessages = new List<object>();
 
-        public Messenger()
+        private Messenger(INetworker networker)
         {
+            _networker = networker;
+            _networker.ReceivedCallback = ReceivedMessage;
         }
 
-        public void InitAsClient(string url, int port)
+        public static Messenger CreateClient(string url, int port)
         {
             var messenger = new PeerToPeerClient();
             messenger.Init(url, port);
-            _messenger = messenger;
-            _messenger.ReceivedCallback = ReceivedMessage;
+            return new Messenger(messenger);
         }
         
-        public void InitAsHost(int port)
+        public static Messenger CreateHost(int port)
         {
             var messenger = new PeerToPeerHost();
             messenger.Init(port);
-            _messenger = messenger;
-            _messenger.ReceivedCallback = ReceivedMessage;
+            return new Messenger(messenger);
         }
 
         public void Send(object item)
@@ -44,7 +44,7 @@ namespace MonoDragons.Core.Networking
             {
                 var message = new Message(messageHistory.Count, item);
                 messageHistory.Add(message);
-                _messenger.Send(message);
+                _networker.Send(message);
             }
         }
 
@@ -72,12 +72,17 @@ namespace MonoDragons.Core.Networking
                     {
                         var unsentMessage = new Message(messageHistory.Count, UnsentMessages[0]);
                         UnsentMessages.RemoveAt(0);
-                        _messenger.Send(unsentMessage);
+                        _networker.Send(unsentMessage);
                         messageHistory.Add(unsentMessage);
                     }
             }
             else if(message.Number > messageHistory.Count)
                 OutOfOrderMessages.Add(message);
+        }
+
+        public void Dispose()
+        {
+            _networker.Dispose();
         }
     }
 }
