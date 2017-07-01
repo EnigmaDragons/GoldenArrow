@@ -8,7 +8,7 @@ namespace MonoDragons.Core.Render
         public void Draw(IEntities entities)
         {
             entities.With<TextDisplay>(
-                    (o, text) => UI.DrawTextCentered(text.Text(), o.Transform.ToRectangle(), text.Color, text.Font));
+                (o, t) => UI.DrawTextAligned(t.Text(), o.Transform.WithPadding(t.Margin).ToRectangle(), t.Color, t.Font, t.Align));
         }
     }
 }

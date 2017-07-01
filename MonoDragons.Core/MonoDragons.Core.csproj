@@ -169,6 +169,7 @@
     <Compile Include="Render\TextRenderer.cs" />
     <Compile Include="Text\IWrapText.cs" />
     <Compile Include="Text\EnumExtensions.cs" />
+    <Compile Include="Text\TextAlign.cs" />
     <Compile Include="Text\WrappingText.cs" />
     <Compile Include="UserInterface\Graphs\Graph.cs" />
     <Compile Include="UserInterface\Graphs\GraphDefaults.cs" />
