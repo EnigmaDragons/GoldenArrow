@@ -12,20 +12,7 @@ namespace MonoDragons.Core.Audio
         {
             var filename = $"Content/Sounds/{ soundName }.mp3";
             var input = new DisposingFileReader(new AudioFileReader(filename));
-
-            if (_musicTrack != null)
-            {
-                _musicTrack.AddDampener();
-                input.Disposed += sound_Disposed;
-            }
-
             AudioPlaybackEngine.Instance.Play(input);
-        }
-
-        private static void sound_Disposed(object sender, System.EventArgs e)
-        {
-            ((DisposingFileReader)sender).Disposed -= sound_Disposed;
-            _musicTrack.RemoveDampener();
         }
 
         static DampeningSampleProvider _musicTrack;
