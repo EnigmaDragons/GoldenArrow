@@ -34,10 +34,6 @@ namespace MonoDragons.Core.MouseControls
                     m.Release();
             });
 
-            // TODO: Kill this
-            if (LeftMouseButtonJustPressed)
-                entities.With<MouseDownAction>((o, t) => o.Transform.If(x => x.Intersects(pos), () => t.Action()));
-
             _lastState = _state;
         }
     }

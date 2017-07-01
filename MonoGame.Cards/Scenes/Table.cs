@@ -29,7 +29,7 @@ namespace MonoGame.Cards.Scenes
                     });
             Entity.Create(new Transform2(new Vector2(200, 200), Sizes.Card))
                 .Add(deck.Sprite)
-                .Add(x => new MouseDownAction(() => deck.If(deck.Count > 0, () => Create(x.Transform.Location, deck.Draw()))));
+                .Add(x => new MouseStateActions { OnPressed = () => deck.If(deck.Count > 0, () => Create(x.Transform.Location, deck.Draw())) });
         }
 
         private void Create(Vector2 location, Card card)
@@ -37,7 +37,7 @@ namespace MonoGame.Cards.Scenes
             Entity.Create(new Transform2(location, Sizes.Card))
                 .Add(card.Sprite)
                 .Add(new MouseDrag())
-                .Add(new ClickAction(card.Flip));
+                .Add(x => new MouseStateActions { OnPressed = () => card.Flip() });
         }
 
         public void Update(TimeSpan delta)

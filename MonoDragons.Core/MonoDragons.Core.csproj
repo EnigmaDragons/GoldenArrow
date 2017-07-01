@@ -87,9 +87,7 @@
     <Compile Include="IO\AppDataJsonIo.cs" />
     <Compile Include="KeyboardControls\KeyboardInput.cs" />
     <Compile Include="KeyboardControls\TypingInput.cs" />
-    <Compile Include="MouseControls\ClickAction.cs" />
     <Compile Include="MouseControls\MouseButton.cs" />
-    <Compile Include="MouseControls\MouseDownAction.cs" />
     <Compile Include="MouseControls\MouseDragging.cs" />
     <Compile Include="MouseControls\MouseStateProcessing.cs" />
     <Compile Include="MouseControls\HoverAction.cs" />
