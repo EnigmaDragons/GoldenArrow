@@ -45,9 +45,11 @@
   <ItemGroup>
     <Compile Include="Audio\Audio.cs" />
     <Compile Include="Audio\AudioPlaybackEngine.cs" />
+    <Compile Include="Audio\BackgroundMusic.cs" />
     <Compile Include="Audio\DisposingFileReader.cs" />
     <Compile Include="Audio\LoopingFileReader.cs" />
     <Compile Include="Audio\DampeningSampleProvider.cs" />
+    <Compile Include="Audio\MusicPlayer.cs" />
     <Compile Include="Audio\Sound.cs" />
     <Compile Include="Audio\Sounds.cs" />
     <Compile Include="Audio\SoundsPlayer.cs" />

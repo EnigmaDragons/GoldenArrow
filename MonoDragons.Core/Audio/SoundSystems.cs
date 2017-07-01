@@ -7,6 +7,7 @@ namespace MonoDragons.Core.Audio
         public static void RegisterAll(EntitySystem system)
         {
             system.Register(new SoundsPlayer());
+            system.Register(new MusicPlayer());
         }
     }
 }

@@ -137,7 +137,6 @@ namespace MonoDragons.Core.Engine
 
         public void NavigateTo(string sceneName)
         {
-            Audio.Audio.StopMusic();
             var scene = _sceneFactory.Create(sceneName);
             scene.Init();
             _currentScene = scene;
