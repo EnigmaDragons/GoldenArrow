@@ -2,7 +2,7 @@
 
 namespace MonoDragons.Core.Audio
 {
-    public struct BackgroundMusic
+    public class BackgroundMusic
     {
         public bool ShouldStopMusic { get; set; }
         public Optional<string> Song { get; set; }

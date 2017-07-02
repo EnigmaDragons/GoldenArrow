@@ -10,12 +10,16 @@ namespace MonoDragons.Core.Networking
     {
         private const string ConnectionDenoter = "C";
         private const string NormalDenoter = " ";
-        private const string PingDenoter = "P";
+        private const string ToEchoDenoter = "E";
+        private const string EchoedDenoter = "e";
 
         private NetClient _client;
-        public Action<string> ReceivedCallback { get; set; } = (s) => { };
+        private long _sent;
 
+        public Action<string> ReceivedCallback { get; set; } = (s) => { };
+        public int ConnectionsCount { get; private set; }
         public bool IsFull { get; private set; }
+        public long Latency { get; private set; } = -2;
 
         public PeerToPeerClient()
         {
@@ -32,7 +36,9 @@ namespace MonoDragons.Core.Networking
         
         public void Send(object item)
         {
-            NetOutgoingMessage message = _client.CreateMessage(NormalDenoter + JsonConvert.SerializeObject(item));
+            NetOutgoingMessage message = _client.CreateMessage(ToEchoDenoter + JsonConvert.SerializeObject(item));
+            Latency = -1;
+            _sent = DateTimeOffset.UtcNow.Ticks;
             _client.SendMessage(message, NetDeliveryMethod.ReliableOrdered);
             _client.FlushSendQueue();
         }
@@ -45,15 +51,21 @@ namespace MonoDragons.Core.Networking
                 if (im.MessageType == NetIncomingMessageType.Data)
                 {
                     var s = im.ReadString();
-                    if (s.Substring(0, 1) == NormalDenoter)
+                    if (s.Substring(0, 1) == ToEchoDenoter)
+                    {
+                        _client.SendMessage(_client.CreateMessage("e" + s.Substring(1)), NetDeliveryMethod.ReliableOrdered);
+                        _client.FlushSendQueue();
+                        ReceivedCallback(s.Substring(1));
+                    }
+                    else if (s.Substring(0, 1) == EchoedDenoter)
+                        Latency = DateTimeOffset.UtcNow.Ticks - _sent;
+                    else if (s.Substring(0,1) == NormalDenoter)
                         ReceivedCallback(s.Substring(1));
                     else if (s.Substring(0, 1) == ConnectionDenoter)
                     {
                         var index = s.IndexOf("/");
-                        if (int.Parse(s.Substring(1, index - 1)) == int.Parse(s.Substring(index + 1)))
-                            IsFull = true;
-                        else
-                            IsFull = false;
+                        ConnectionsCount = int.Parse(s.Substring(1, index - 1));
+                        IsFull = ConnectionsCount == int.Parse(s.Substring(index + 1));
                     }
 
                 }

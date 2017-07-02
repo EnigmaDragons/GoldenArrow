@@ -16,6 +16,8 @@ namespace MonoDragons.Core.Networking
         private List<Message> OutOfOrderMessages = new List<Message>();
         private List<object> UnsentMessages = new List<object>();
         public bool IsFull { get { return _networker.IsFull; } }
+        public int ConnectionsCount { get { return _networker.ConnectionsCount; } }
+        public long Latency { get { return _networker.Latency; } }
 
         private Messenger(INetworker networker)
         {

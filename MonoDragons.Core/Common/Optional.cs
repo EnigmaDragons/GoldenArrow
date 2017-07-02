@@ -18,7 +18,10 @@ namespace MonoDragons.Core.Common
             }
         }
 
-        public Optional() { }
+        public Optional()
+        {
+            HasValue = false;   
+        }
 
         public Optional(T value)
         {
@@ -34,6 +37,12 @@ namespace MonoDragons.Core.Common
         public bool IsFalse(Predicate<T> condition)
         {
             return HasValue && !condition(_value);
+        }
+
+        public void IfPresent(Action<T> action)
+        {
+            if (HasValue)
+                action(_value);
         }
 
         public static implicit operator Optional<T>(T obj)
