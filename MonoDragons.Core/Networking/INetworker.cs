@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace MonoDragons.Core.Networking
 {
@@ -7,5 +6,8 @@ namespace MonoDragons.Core.Networking
     {
         Action<string> ReceivedCallback { get; set; }
         void Send(object item);
+        int ConnectionsCount { get; }
+        bool IsFull { get; }
+        long Latency { get; }
     }
 }
