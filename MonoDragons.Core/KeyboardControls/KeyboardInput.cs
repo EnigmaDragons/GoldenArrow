@@ -47,7 +47,6 @@ namespace MonoDragons.Core.KeyboardControls
             var tempkeys = Enum.GetValues(typeof(Keys)).Cast<Keys>().ToArray();
             for (var i = 0; i < tempkeys.Length; i++)
             {
-                int keyEnum = (int) tempkeys[i];
                 if (i == 1 || i == 11 || (i > 26 && i < 63) || (i > 67 && i < 76) || i == 137) //get the keys listed above as well as A-Z
                     keys.Add(tempkeys[i]); //fill our key array
             }
