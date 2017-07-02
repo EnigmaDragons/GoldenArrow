@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using GoldenArrow.Game;
 using Microsoft.Xna.Framework;
+using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
 using MonoDragons.Core.Graphics;
 using MonoDragons.Core.KeyboardControls;
@@ -74,5 +77,40 @@ namespace GoldenArrow
                     }
                 });
         }
+
+        public static List<GameObject> CreatePlayerResourceBar(Vector2 position, PlayerResources resources)
+        {
+            var x = position.X;
+            var y = position.Y;
+
+            var resourceData = new Map<string, Func<string>>
+            {
+                ["wood"] = () => resources.Wood.ToString(),
+                ["food"] = () => resources.Food.ToString(),
+                ["gold"] = () => resources.Gold.ToString(),
+                ["stone"] = () => resources.Stone.ToString(),
+                ["population"] = () => resources.Population.ToString(),
+                ["happiness"] = () => resources.Happiness.ToString()
+            };
+
+            var resourceIcons = new List<GameObject>();
+            foreach (KeyValuePair<string, Func<string>> entry in resourceData)
+            {
+                resourceIcons.Add(CreateResourceIcon(new Vector2(x, y), entry.Key, entry.Value));
+                x += IconSize + 5;
+            }
+            return resourceIcons;
+
+        }
+
+        public static GameObject CreateResourceIcon(Vector2 position, string iconName, Func<string> value)
+        {
+            return Entity
+                .Create(new Transform2(position, new Size2(IconSize, IconSize)))
+                .Add(new Sprite("Images/Icons/", iconName))
+                .Add(new TextDisplay { Text = value });
+        }
+
+        private const int IconSize = 40;
     }
 }

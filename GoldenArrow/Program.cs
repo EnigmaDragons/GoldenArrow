@@ -21,7 +21,7 @@ namespace GoldenArrow
         [STAThread]
         static void Main()
         {
-            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "Setup", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "InGame", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
             {
                 MouseSystems.RegisterAll(Entity.System);
                 SoundSystems.RegisterAll(Entity.System);
@@ -46,11 +46,12 @@ namespace GoldenArrow
                     { "Logo", () => new LogoScene() },
                     { "MainMenu", () => new MainMenu() },
                     { "Table", () => new Table() },
-                    { "Typing", () => new TypingScene() },
+                    { "Silas", () => new SilasDemoScene() },
                     { "Setup", () => new SetupGame() },
                     { "Join", () => new JoinGame() },
                     { "Host", () => new HostGame() },
                     { "Lobby", () => new Lobby() },
+                    { "InGame", () => new InGame() },
                 });
         }
     }
