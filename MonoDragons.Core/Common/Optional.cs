@@ -36,6 +36,12 @@ namespace MonoDragons.Core.Common
             return HasValue && !condition(_value);
         }
 
+        public void IfPresent(Action<T> action)
+        {
+            if (HasValue)
+                action(_value);
+        }
+
         public static implicit operator Optional<T>(T obj)
         {
             return new Optional<T>(obj);

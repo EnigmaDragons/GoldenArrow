@@ -95,6 +95,7 @@
     <Compile Include="KeyboardControls\KeyboardInput.cs" />
     <Compile Include="KeyboardControls\TypingInput.cs" />
     <Compile Include="MouseControls\MouseClickTarget.cs" />
+    <Compile Include="MouseControls\MouseDropTarget.cs" />
     <Compile Include="MouseControls\MouseSnapshot.cs" />
     <Compile Include="MouseControls\MouseButton.cs" />
     <Compile Include="MouseControls\MouseClicking.cs" />

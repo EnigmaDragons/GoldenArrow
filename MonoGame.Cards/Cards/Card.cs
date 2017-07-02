@@ -5,7 +5,17 @@ namespace MonoGame.Cards.Cards
     public sealed class Card
     {
         private readonly CardData _data;
-        private bool _faceUp;
+        private bool _faceup;
+
+        public bool FaceUp
+        {
+            get { return _faceup; }
+            set
+            {
+                _faceup = value;
+                UpdateSprite();
+            }
+        }
 
         public Sprite Sprite { get; }
 
@@ -17,8 +27,13 @@ namespace MonoGame.Cards.Cards
 
         public void Flip()
         {
-            _faceUp = !_faceUp;
-            Sprite.Name = _faceUp ? _data.Front : _data.Back;
+            FaceUp = !FaceUp;
+            UpdateSprite();
+        }
+
+        private void UpdateSprite()
+        {
+            Sprite.Name = FaceUp ? _data.Front : _data.Back;
         }
     }
 }
