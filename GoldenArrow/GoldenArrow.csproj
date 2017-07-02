@@ -48,6 +48,7 @@
     <Compile Include="Scenes\SetupGame.cs" />
     <Compile Include="Scenes\Lobby.cs" />
     <Compile Include="Scenes\TypingScene.cs" />
+    <Compile Include="UIFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
