@@ -1,4 +1,6 @@
-﻿using MonoDragons.Core.Engine;
+﻿using System.Linq;
+using MonoDragons.Core.Common;
+using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
 using MonoDragons.Core.PhysicsEngine;
 
@@ -8,7 +10,9 @@ namespace MonoDragons.Core.Render
     {
         public void Draw(IEntities entities)
         {
-            entities.With<Sprite>((o, s) => World.Draw(s.Name, o.Transform));
+            entities.Collect<Sprite>()
+                .OrderByDescending(x => x.Transform.ZIndex)
+                    .ForEach(t => t.With<Sprite>(s => World.Draw(s.Name, t.Transform)));
         }
     }
 }
