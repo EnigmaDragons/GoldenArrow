@@ -34,12 +34,17 @@ namespace MonoDragons.Core.Entities
 
         public void Remove(GameObject gameObject)
         {
-            _entities.Remove(gameObject.Id);
+            Remove(gameObject.Id);
         }
 
         public void Remove(IEnumerable<GameObject> objs)
         {
-            objs.ForEach(x => _entities.Remove(x.Id));
+            objs.ForEach(x => Remove(x.Id));
+        }
+
+        public void Remove(int id)
+        {
+            _entities.Remove(id);
         }
 
         public void With<T>(int entityId, Action<GameObject, T> action)

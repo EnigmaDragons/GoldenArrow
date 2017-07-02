@@ -21,6 +21,11 @@ namespace MonoDragons.Core.Entities
             return Objs.Create(transform);
         }
 
+        public static void Destroy(int id)
+        {
+            Objs.Remove(id);
+        }
+
         public static void Destroy(GameObject obj)
         {
             Objs.Remove(obj);
