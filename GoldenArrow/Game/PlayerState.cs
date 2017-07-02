@@ -1,6 +1,6 @@
 ﻿namespace GoldenArrow.Game
 {
-    public sealed class PlayerResources
+    public sealed class PlayerState
     {
         public int Player { get; }
 
@@ -10,8 +10,11 @@
         public int Population { get; set; }
         public int Stone { get; set; }
         public int Happiness { get; set; }
+        public int PointsFromBuildings { get; set; }
 
-        public PlayerResources(int player)
+        public int TotalVictoryPoints => Population + Happiness + PointsFromBuildings;
+
+        public PlayerState(int player)
         {
             Player = player;
         }

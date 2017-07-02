@@ -16,7 +16,7 @@ namespace GoldenArrow.Scenes
     {
         protected override IEnumerable<GameObject> CreateObjs()
         {
-            return UIFactory.CreatePlayerResourceBar(new Vector2(100, 100), new PlayerResources(1));
+            yield break;
         }
     }
 }
