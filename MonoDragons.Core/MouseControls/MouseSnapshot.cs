@@ -10,8 +10,11 @@ namespace MonoDragons.Core.MouseControls
 
         public Point LastPosition => _last.Position;
         public Point Position => _current.Position;
+        public Point MovedBy => Position - LastPosition;
         public bool LeftIsPressed => _current.LeftButton == ButtonState.Pressed;
         public bool RightIsPressed => _current.RightButton == ButtonState.Pressed;
+        public bool LeftStillPressed => LeftIsPressed && _last.LeftButton == ButtonState.Pressed;
+        public bool RightStillPressed => RightStillPressed && _last.RightButton == ButtonState.Pressed;
         public bool LeftButtonJustPressed => _last.LeftButton != ButtonState.Pressed && LeftIsPressed;
         public bool LeftButtonJustReleased => _last.LeftButton == ButtonState.Pressed && !LeftIsPressed;
         public bool RightButtonJustPressed => _last.RightButton != ButtonState.Pressed && RightIsPressed;

@@ -41,5 +41,12 @@ namespace MonoGame.Cards.Decks
         {
             Sprite.Name = Count > 0 ? _cards[0].Sprite.Name : Empty;
         }
+
+        public void PutFacedownOnTop(Card card)
+        {
+            card.FaceUp = false;
+            _cards.Insert(0, card);
+            UpdateSprite();
+        }
     }
 }
