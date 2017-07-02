@@ -46,9 +46,11 @@ namespace GoldenArrow
                     { "Logo", () => new LogoScene() },
                     { "MainMenu", () => new MainMenu() },
                     { "Table", () => new Table() },
-                    { "Setup", () => new SetupGame() },
                     { "Typing", () => new TypingScene() },
+                    { "Setup", () => new SetupGame() },
                     { "Join", () => new JoinGame() },
+                    { "Host", () => new HostGame() },
+                    { "Lobby", () => new Lobby() },
                 });
         }
     }
