@@ -8,8 +8,14 @@ namespace MonoDragons.Core.Networking
 {
     public class PeerToPeerClient : INetworker
     {
+        private const string ConnectionDenoter = "C";
+        private const string NormalDenoter = " ";
+        private const string PingDenoter = "P";
+
         private NetClient _client;
         public Action<string> ReceivedCallback { get; set; } = (s) => { };
+
+        public bool IsFull { get; private set; }
 
         public PeerToPeerClient()
         {
@@ -26,7 +32,7 @@ namespace MonoDragons.Core.Networking
         
         public void Send(object item)
         {
-            NetOutgoingMessage message = _client.CreateMessage(JsonConvert.SerializeObject(item));
+            NetOutgoingMessage message = _client.CreateMessage(NormalDenoter + JsonConvert.SerializeObject(item));
             _client.SendMessage(message, NetDeliveryMethod.ReliableOrdered);
             _client.FlushSendQueue();
         }
@@ -37,7 +43,20 @@ namespace MonoDragons.Core.Networking
             while ((im = _client.ReadMessage()) != null)
             {
                 if (im.MessageType == NetIncomingMessageType.Data)
-                    ReceivedCallback(im.ReadString());
+                {
+                    var s = im.ReadString();
+                    if (s.Substring(0, 1) == NormalDenoter)
+                        ReceivedCallback(s.Substring(1));
+                    else if (s.Substring(0, 1) == ConnectionDenoter)
+                    {
+                        var index = s.IndexOf("/");
+                        if (int.Parse(s.Substring(1, index - 1)) == int.Parse(s.Substring(index + 1)))
+                            IsFull = true;
+                        else
+                            IsFull = false;
+                    }
+
+                }
                 _client.Recycle(im);
             }
         }

@@ -7,5 +7,6 @@ namespace MonoDragons.Core.Networking
     {
         Action<string> ReceivedCallback { get; set; }
         void Send(object item);
+        bool IsFull { get; }
     }
 }

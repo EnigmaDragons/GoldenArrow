@@ -15,6 +15,7 @@ namespace MonoDragons.Core.Networking
         private List<Message> messageHistory = new List<Message>();
         private List<Message> OutOfOrderMessages = new List<Message>();
         private List<object> UnsentMessages = new List<object>();
+        public bool IsFull { get { return _networker.IsFull; } }
 
         private Messenger(INetworker networker)
         {
@@ -29,10 +30,10 @@ namespace MonoDragons.Core.Networking
             return new Messenger(messenger);
         }
         
-        public static Messenger CreateHost(int port)
+        public static Messenger CreateHost(int port, int maxConnections = 1000)
         {
             var messenger = new PeerToPeerHost();
-            messenger.Init(port);
+            messenger.Init(port, maxConnections);
             return new Messenger(messenger);
         }
 
@@ -48,7 +49,7 @@ namespace MonoDragons.Core.Networking
             }
         }
 
-        public void ReceivedMessage(string json)
+        private void ReceivedMessage(string json)
         {
             JObject jObj = JsonConvert.DeserializeObject<JObject>(json);
             long number = jObj.Value<long>("Number");

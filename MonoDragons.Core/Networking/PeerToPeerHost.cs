@@ -10,12 +10,19 @@ namespace MonoDragons.Core.Networking
 {
     public class PeerToPeerHost : INetworker
     {
-        private static NetServer _server;
-        public Action<string> ReceivedCallback { get; set; } = (s) => { };
+        private const string ConnectionDenoter = "C";
+        private const string NormalDenoter = " ";
+        private const string PingDenoter = "P";
 
-        public void Init(int port)
+        private NetPeerConfiguration _config { get { return _server.Configuration; } }
+        private NetServer _server;
+        public Action<string> ReceivedCallback { get; set; } = (s) => { };
+        public bool IsFull { get { return _config.MaximumConnections == _server.ConnectionsCount; } }
+
+        public void Init(int port, int maxConnections)
         {
-            _server = new NetServer(new NetPeerConfiguration("chat") { Port = port });
+            _server = new NetServer(new NetPeerConfiguration("chat") { Port = port, MaximumConnections = maxConnections });
+            _config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server.Start();
             _server.RegisterReceivedCallback(new SendOrPostCallback((a) => GetNewMessages()));
         }
@@ -25,18 +32,35 @@ namespace MonoDragons.Core.Networking
             NetIncomingMessage im;
             while ((im = _server.ReadMessage()) != null)
             {
-                if (im.MessageType == NetIncomingMessageType.Data)
+                if (im.MessageType == NetIncomingMessageType.ConnectionApproval && _config.MaximumConnections != _server.ConnectionsCount)
                 {
-                    var s = im.ReadString();
+                    im.SenderConnection.Approve();
+                }
+                else if (im.MessageType == NetIncomingMessageType.StatusChanged && (NetConnectionStatus)im.ReadByte() == NetConnectionStatus.Connected)
+                {
                     List<NetConnection> all = _server.Connections;
-                    all.Remove(im.SenderConnection);
-
                     if (all.Count > 0)
                     {
-                        NetOutgoingMessage message = _server.CreateMessage(s);
+                        NetOutgoingMessage message = _server.CreateMessage(ConnectionDenoter + _server.ConnectionsCount + "/"
+                            + _config.MaximumConnections);
                         _server.SendMessage(message, all, NetDeliveryMethod.ReliableOrdered, 0);
                     }
-                    ReceivedCallback(s);
+                }
+                else if (im.MessageType == NetIncomingMessageType.Data)
+                {
+                    var s = im.ReadString();
+                    if (s.Substring(0, 1) == NormalDenoter)
+                    {
+                        List<NetConnection> all = _server.Connections;
+                        all.Remove(im.SenderConnection);
+
+                        if (all.Count > 0)
+                        {
+                            NetOutgoingMessage message = _server.CreateMessage(s);
+                            _server.SendMessage(message, all, NetDeliveryMethod.ReliableOrdered, 0);
+                        }
+                        ReceivedCallback(s.Substring(1));
+                    }
                 }
                 _server.Recycle(im);
             }
@@ -44,7 +68,7 @@ namespace MonoDragons.Core.Networking
 
         public void Send(object item)
         {
-            NetOutgoingMessage om = _server.CreateMessage(JsonConvert.SerializeObject(item));
+            NetOutgoingMessage om = _server.CreateMessage(NormalDenoter + JsonConvert.SerializeObject(item));
             List<NetConnection> all = _server.Connections;
             if(all.Count > 0)
                 _server.SendMessage(om, all, NetDeliveryMethod.ReliableOrdered, 0);
