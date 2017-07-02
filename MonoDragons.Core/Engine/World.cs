@@ -14,6 +14,7 @@ using MonoDragons.Core.Inputs;
 using System;
 using MonoDragons.Core.Navigation;
 using MonoDragons.Core.Render;
+using MonoDragons.Core.Scenes;
 using MonoDragons.Core.UserInterface.Graphs;
 
 namespace MonoDragons.Core.Engine
@@ -49,12 +50,18 @@ namespace MonoDragons.Core.Engine
             _spriteBatch.Draw(texture, ScaleRectangle(rectangle), color);
         }
 
-
         public static void NavigateToScene(string sceneName)
         {
             Input.ClearBindings();
             Resources.Unload();
             _navigation.NavigateTo(sceneName);
+        }
+
+        public static void NavigateToScene(IScene scene)
+        {
+            Input.ClearBindings();
+            Resources.Unload();
+            _navigation.NavigateTo(scene);
         }
 
         public static void DrawBackgroundColor(Color color)

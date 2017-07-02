@@ -142,6 +142,12 @@ namespace MonoDragons.Core.Engine
             _currentScene = scene;
         }
 
+        public void NavigateTo(IScene scene)
+        {
+            scene.Init();
+            _currentScene = scene;
+        }
+
         // TODO: This is only for development. Remove this when re're ready to release to production!!
         private void CheckForEscape()
         {
