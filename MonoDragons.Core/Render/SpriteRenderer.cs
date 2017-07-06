@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using MonoDragons.Core.Common;
-using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
 using MonoDragons.Core.PhysicsEngine;
 using Microsoft.Xna.Framework;
@@ -16,7 +15,8 @@ namespace MonoDragons.Core.Render
             entities.Collect<Sprite>()
                 .OrderByDescending(x => x.Transform.ZIndex)
                     .ForEach(t => t.With<Sprite>(s =>
-                        sprites.Draw(Resources.Load<Texture2D>(s.Name), t.Transform.ToRectangle(), Color.White)));
+                        sprites.Draw(Resources.Load<Texture2D>(s.Name), null, t.Transform.ToRectangle(), null, null,
+                            t.Transform.Rotation.Value * .017453292519f, new Vector2(1, 1))));
         }
     }
 }

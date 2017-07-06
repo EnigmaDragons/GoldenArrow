@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
 using MonoDragons.Core.Memory;
 
@@ -12,7 +11,7 @@ namespace MonoDragons.Core.Render
         {
             entities.With<BorderTexture>((o, b) => {
                 Resources.Put(b.Value.GetHashCode().ToString(), b.Value);
-                sprites.Draw(b.Value, o.Transform.ToRectangle(), Color.White);
+                sprites.Draw(b.Value, null, o.Transform.ToRectangle(), null, null, o.Transform.Rotation.Value * .017453292519f, new Vector2(1, 1));
             });
         }
     }

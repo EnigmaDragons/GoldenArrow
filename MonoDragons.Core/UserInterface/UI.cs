@@ -42,27 +42,27 @@ namespace MonoDragons.Core.UserInterface
 
         public static void DrawCentered(string imageName, Vector2 widthHeight)
         {
-            DrawCenteredWithOffset(imageName, widthHeight, Vector2.Zero);
+            DrawCenteredWithOffset(imageName, widthHeight, Vector2.Zero, Rotation2.Default);
         }
         
         public static void DrawCentered(string imageName, Transform2 transform)
         {
-            DrawCenteredWithOffset(imageName, transform.ToRectangle().Size.ToVector2(), transform.Location);
+            DrawCenteredWithOffset(imageName, transform.ToRectangle().Size.ToVector2(), transform.Location, transform.Rotation);
         }
 
         public static void DrawCenteredWithOffset(string imageName, Vector2 offSet)
         {
             var texture = Resources.Load<Texture2D>(imageName);
-            DrawCenteredWithOffset(imageName, new Vector2(texture.Width, texture.Height), offSet);
+            DrawCenteredWithOffset(imageName, new Vector2(texture.Width, texture.Height), offSet, Rotation2.Default);
         }
 
-        public static void DrawCenteredWithOffset(string imageName, Vector2 widthHeight, Vector2 offSet)
+        public static void DrawCenteredWithOffset(string imageName, Vector2 widthHeight, Vector2 offSet, Rotation2 rotation)
         {
             _spriteBatch.Draw(Resources.Load<Texture2D>(imageName), null,
                 new Rectangle(ScalePoint(_display.GameWidth / 2 / _display.Scale - widthHeight.X / 2 + offSet.X,
                     _display.GameHeight / 2 / _display.Scale - widthHeight.Y / 2 + offSet.Y),
                     ScalePoint(widthHeight.X, widthHeight.Y)),
-                null, null, 0, new Vector2(1, 1));
+                null, null, rotation.Value * .017453292519f, new Vector2(1, 1));
         }
 
         public static void DrawText(string text, Vector2 position, Color color)

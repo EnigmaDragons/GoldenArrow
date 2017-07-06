@@ -19,7 +19,7 @@ namespace GoldenArrow.Scenes
 
         public void Draw()
         {
-            World.DrawRotatedFromCenter(image, transform);
+            World.Draw(image, transform);
         }
 
         public void Update(TimeSpan delta)
