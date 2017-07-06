@@ -47,7 +47,7 @@ namespace MonoDragons.Core.KeyboardControls
             var tempkeys = Enum.GetValues(typeof(Keys)).Cast<Keys>().ToArray();
             for (var i = 0; i < tempkeys.Length; i++)
             {
-                if (i == 1 || i == 11 || (i > 26 && i < 63) || (i > 67 && i < 76) || i == 137) //get the keys listed above as well as A-Z
+                if (i == 1 || i == 11 || (i > 26 && i < 63) || (i > 66 && i < 76) || i == 137 || i == 81) //get the keys listed above as well as A-Z
                     keys.Add(tempkeys[i]); //fill our key array
             }
             IskeyUp = new bool[keys.Count];
@@ -65,20 +65,18 @@ namespace MonoDragons.Core.KeyboardControls
                 {
                     if (IskeyUp[i])
                     {
-                        if (key == Keys.Back)
-                            AddBackspace();
                         if (key == Keys.Space)
                             _newInputs.Add(" ");
-                        if (key == Keys.OemPeriod)
+                        if (key == Keys.OemPeriod || key == Keys.Decimal)
                             _newInputs.Add(".");
                         if (key.ToString().StartsWith("NumPad"))
                             _newInputs.Add(key.ToString().Substring(6));
-                        if (i > 1 && i < 12)
+                        if (i >= 2 && i <= 11)
                         {
-                            if (state.IsKeyDown(Keys.RightShift) || state.IsKeyDown(Keys.LeftShift))
+                            if (state.IsKeyUp(Keys.RightShift) || state.IsKeyUp(Keys.LeftShift))
                                 _newInputs.Add(key.ToString()[1].ToString());
                         }
-                        if (i > 11 && i < 38)
+                        if (i >= 12 && i <= 37)
                         {
                             if (state.IsKeyDown(Keys.RightShift) || state.IsKeyDown(Keys.LeftShift))
                                 _newInputs.Add(key.ToString());
