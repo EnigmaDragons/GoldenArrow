@@ -21,6 +21,7 @@ namespace MonoDragons.Core.Engine
 {
     public static class World
     {
+        //This seems oddly specific.
         private static readonly ColoredRectangle _darken = new ColoredRectangle { Color = Color.FromNonPremultiplied(0, 0, 0, 130),
             Transform = new Transform2(new Size2(1920, 1080)) };
         private static readonly Events _events = new Events();
@@ -66,7 +67,7 @@ namespace MonoDragons.Core.Engine
 
         public static void DrawBackgroundColor(Color color)
         {
-            _game.GraphicsDevice.Clear(color);
+            _spriteBatch.GraphicsDevice.Clear(color);
         }
 
         public static void Draw(string imageName, Vector2 pixelPosition)

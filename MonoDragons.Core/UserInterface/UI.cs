@@ -11,7 +11,8 @@ namespace MonoDragons.Core.UserInterface
 {
     public static class UI
     {
-        private static readonly Dictionary<TextAlign, Func<Rectangle, Vector2, Vector2>> _alignPositions = new Dictionary<TextAlign, Func<Rectangle, Vector2, Vector2>>
+        private static readonly Dictionary<TextAlign, Func<Rectangle, Vector2, Vector2>> _alignPositions =
+            new Dictionary<TextAlign, Func<Rectangle, Vector2, Vector2>>
         {
             { TextAlign.Left, GetLeftPosition },
             { TextAlign.Center, GetCenterPosition },
