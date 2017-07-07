@@ -10,8 +10,10 @@ using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.PhysicsEngine;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
-using MonoGame.Cards;
 using MonoGame.Cards.Cards;
+using MonoGame.Cards.Decks;
+using MonoGame.Cards.Hands;
+using MonoGame.Cards;
 
 namespace GoldenArrow.Scenes
 {
@@ -19,12 +21,30 @@ namespace GoldenArrow.Scenes
     {
         protected override IEnumerable<GameObject> CreateObjs()
         {
+            List<Card> cards = new List<Card>();
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/stone", Back = "Cards/back-basic" })));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/gold", Back = "Cards/back-basic" })));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/food", Back = "Cards/back-basic" })));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/wood", Back = "Cards/back-basic" })));
+            cards.Shuffle();
+            var deck = new Deck(UIFactory.CreateCard, cards);
             return CreateTable()
-                .Concat(CreatePlayerResourceBar(new Vector2(100, 100), new PlayerState(1))
+                .Concat(CreatePlayerResourceBar(new Vector2(100, 100), new PlayerState(1)))
                 .Concat(CreatePlayerResourceBar(new Vector2(100, 200), new PlayerState(2)))
                 .Concat(CreatePlayerResourceBar(new Vector2(100, 300), new PlayerState(3)))
-                .Concat(CreatePlayerResourceBar(new Vector2(100, 400), new PlayerState(4))))
-                .Concat(CreateCard(new Card(new CardData { Back = "Cards/back-basic", Front = "Cards/food", Name = "Food"}), Vector2.Zero));
+                .Concat(CreatePlayerResourceBar(new Vector2(100, 400), new PlayerState(4)))
+                .Concat(CreateHand(new Vector2(800, 700), deck, "bob"))
+                .Concat(CreateHand(new Vector2(200, 450), deck, "not bob"))
+                .Concat(CreateHand(new Vector2(1400, 450), deck, "not bob"))
+                .Concat(CreateHand(new Vector2(800, 100), deck, "not bob"));
+        }
+
+        private static List<GameObject> CreateHand(Vector2 position, Deck deck, string player)
+        {
+            return Entity.Create(new Transform2(position, 1))
+                .Add(new Hand(new HandData {Cards = Enumerable.Range(0, 9).Select(x => deck.Draw().Id).ToList(), Player = player }))
+                .Add(new FanOut())
+                .AsList();
         }
 
         private static List<GameObject> CreateCard(Card card, Vector2 location)

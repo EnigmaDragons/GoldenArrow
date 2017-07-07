@@ -32,5 +32,10 @@ namespace MonoGame.Cards.Hands
         {
             return _data.Cards.ToList();
         }
+
+        public string Player()
+        {
+            return _data.Player;
+        }
     }
 }

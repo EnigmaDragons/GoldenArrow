@@ -25,6 +25,7 @@ namespace MonoGame.Cards.Hands
                 return;
             ResizeHand(transform, hand, fanout);
             RepositionCards(entities, hand, CalculateCardPositions(GetCardSize(entities), transform, hand.Count()));
+            FaceCardsCorrectly(entities, hand);
         }
 
         private void ResizeHand(Transform2 transform, Hand hand, FanOut fanout)
@@ -84,6 +85,17 @@ namespace MonoGame.Cards.Hands
             var orderedYPoints = new List<int>(yPoints.ToList());
             orderedYPoints.Reverse();
             return orderedYPoints.Take(cardCount - yPoints.Count).Concat(yPoints).ToList();
+        }
+
+        private void FaceCardsCorrectly(IEntities entities, Hand hand)
+        {
+            hand.Cards().ForEachIndex((cardId, i) => entities.With<Card>(cardId, (obj, card) =>
+            {
+                //TODO make this not concrete
+                if ((hand.Player().Equals("bob") && !card.FaceUp) 
+                    || (!hand.Player().Equals("bob") && card.FaceUp))
+                    card.Flip();
+            }));
         }
     }
 }
