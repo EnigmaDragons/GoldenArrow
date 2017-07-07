@@ -43,6 +43,8 @@
     <Compile Include="Cards\CardData.cs" />
     <Compile Include="Decks\Deck.cs" />
     <Compile Include="GeneralTodoList.cs" />
+    <Compile Include="Hands\FanOut.cs" />
+    <Compile Include="Hands\HandDisplaying.cs" />
     <Compile Include="Hands\Hand.cs" />
     <Compile Include="Hands\HandData.cs" />
     <Compile Include="Layers.cs" />
