@@ -6,9 +6,12 @@ using Microsoft.Xna.Framework;
 using MonoDragons.Core.Common;
 using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
+using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.PhysicsEngine;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
+using MonoGame.Cards;
+using MonoGame.Cards.Cards;
 
 namespace GoldenArrow.Scenes
 {
@@ -20,7 +23,17 @@ namespace GoldenArrow.Scenes
                 .Concat(CreatePlayerResourceBar(new Vector2(100, 100), new PlayerState(1))
                 .Concat(CreatePlayerResourceBar(new Vector2(100, 200), new PlayerState(2)))
                 .Concat(CreatePlayerResourceBar(new Vector2(100, 300), new PlayerState(3)))
-                .Concat(CreatePlayerResourceBar(new Vector2(100, 400), new PlayerState(4))));
+                .Concat(CreatePlayerResourceBar(new Vector2(100, 400), new PlayerState(4))))
+                .Concat(CreateCard(new Card(new CardData { Back = "Cards/back-basic", Front = "Cards/food", Name = "Food"}), Vector2.Zero));
+        }
+
+        private static List<GameObject> CreateCard(Card card, Vector2 location)
+        {
+            return Entity.Create(new Transform2(location, Sizes.Card))
+                .Add(card)
+                .Add(card.Sprite)
+                .Add(new MouseDrag())
+                .Add(x => new MouseStateActions { OnReleased = () => card.Flip() }).AsList();
         }
 
         private static List<GameObject> CreateTable()
