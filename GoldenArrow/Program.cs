@@ -23,7 +23,7 @@ namespace GoldenArrow
         [STAThread]
         static void Main()
         {
-            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "Hand", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "InGame", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
             {
                 MouseSystems.RegisterAll(Entity.System);
                 SoundSystems.RegisterAll(Entity.System);
