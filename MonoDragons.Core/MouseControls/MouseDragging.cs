@@ -16,6 +16,9 @@ namespace MonoDragons.Core.MouseControls
         {
             _mouse = _mouse.Current();
 
+            if (!_mouse.IsOnGameScreen)
+                return;
+
             if (_mouse.LeftStillPressed)
                 UpdateTarget();
             if (_mouse.LeftButtonJustPressed)

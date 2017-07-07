@@ -6,12 +6,14 @@ using Microsoft.Xna.Framework;
 using MonoDragons.Core.Common;
 using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
+using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.PhysicsEngine;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
 using MonoGame.Cards.Cards;
 using MonoGame.Cards.Decks;
 using MonoGame.Cards.Hands;
+using MonoGame.Cards;
 
 namespace GoldenArrow.Scenes
 {
@@ -20,10 +22,10 @@ namespace GoldenArrow.Scenes
         protected override IEnumerable<GameObject> CreateObjs()
         {
             List<Card> cards = new List<Card>();
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/stone", Back = "Cards/back" })));
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/gold", Back = "Cards/back" })));
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/food", Back = "Cards/back" })));
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/wood", Back = "Cards/back" })));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/stone", Back = "Cards/back-basic" })));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/gold", Back = "Cards/back-basic" })));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/food", Back = "Cards/back-basic" })));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/wood", Back = "Cards/back-basic" })));
             cards.Shuffle();
             var deck = new Deck(UIFactory.CreateCard, cards);
             return CreateTable()
@@ -43,6 +45,15 @@ namespace GoldenArrow.Scenes
                 .Add(new Hand(new HandData {Cards = Enumerable.Range(0, 9).Select(x => deck.Draw().Id).ToList(), Player = player }))
                 .Add(new FanOut())
                 .AsList();
+        }
+
+        private static List<GameObject> CreateCard(Card card, Vector2 location)
+        {
+            return Entity.Create(new Transform2(location, Sizes.Card))
+                .Add(card)
+                .Add(card.Sprite)
+                .Add(new MouseDrag())
+                .Add(x => new MouseStateActions { OnReleased = () => card.Flip() }).AsList();
         }
 
         private static List<GameObject> CreateTable()

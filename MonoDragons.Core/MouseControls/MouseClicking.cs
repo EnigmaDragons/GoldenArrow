@@ -12,7 +12,7 @@ namespace MonoDragons.Core.MouseControls
         {
             _mouse = _mouse.Current();
 
-            if (!_mouse.ButtonJustPressed)
+            if (!_mouse.IsOnGameScreen || !_mouse.ButtonJustPressed)
                 return;
 
             entities.With<MouseClickListener>(m => m.OnClick(_mouse.Position));
