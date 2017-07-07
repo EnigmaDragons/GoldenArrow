@@ -21,6 +21,7 @@ namespace MonoDragons.Core.Engine
 {
     public static class World
     {
+        //This seems oddly specific.
         private static readonly ColoredRectangle _darken = new ColoredRectangle { Color = Color.FromNonPremultiplied(0, 0, 0, 130),
             Transform = new Transform2(new Size2(1920, 1080)) };
         private static readonly Events _events = new Events();
@@ -66,7 +67,7 @@ namespace MonoDragons.Core.Engine
 
         public static void DrawBackgroundColor(Color color)
         {
-            _game.GraphicsDevice.Clear(color);
+            _spriteBatch.GraphicsDevice.Clear(color);
         }
 
         public static void Draw(string imageName, Vector2 pixelPosition)
@@ -86,7 +87,7 @@ namespace MonoDragons.Core.Engine
             _spriteBatch.Draw(texture, ScaleRectangle(rectPosition), Color.White);
         }
 
-        public static void DrawRotatedFromCenter(Texture2D texture, Rectangle rectPosition, Rotation2 rotation)
+        public static void Draw(Texture2D texture, Rectangle rectPosition, Rotation2 rotation)
         {
             Resources.Put(texture.GetHashCode().ToString(), texture);
             var ScaledRect = ScaleRectangle(rectPosition);
@@ -132,11 +133,6 @@ namespace MonoDragons.Core.Engine
 
         public static void Draw(string name, Transform2 transform)
         {
-             Draw(name, transform.ToRectangle());
-        }
-
-        public static void DrawRotatedFromCenter(string name, Transform2 transform)
-        {
             var resource = Resources.Load<Texture2D>(name);
             var x = transform.Rotation.Value;
             _spriteBatch.Draw(resource, null, ScaleRectangle(transform.ToRectangle()), null, new Vector2(resource.Width / 2, resource.Height / 2),
@@ -145,7 +141,7 @@ namespace MonoDragons.Core.Engine
 
         public static void Draw(Texture2D texture, Transform2 transform)
         {
-            Draw(texture, transform.ToRectangle());
+            Draw(texture, transform.ToRectangle(), transform.Rotation);
         }
 
         public static void DrawLine(Texture2D texture, Vector2 start, Vector2 end)

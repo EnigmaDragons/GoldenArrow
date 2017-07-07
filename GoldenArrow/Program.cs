@@ -52,6 +52,7 @@ namespace GoldenArrow
                     { "Host", () => new HostGame() },
                     { "InGame", () => new InGame() },
                     { "GameSummary", () => new GameSummary() },
+                    { "TimTest", () => new TimTestScene() },
                 });
         }
     }
