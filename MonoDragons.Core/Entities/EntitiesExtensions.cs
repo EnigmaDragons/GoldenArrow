@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoDragons.Core.Common;
 
@@ -36,6 +37,13 @@ namespace MonoDragons.Core.Entities
             var targets = new List<GameObject>();
             entities.With<T>((o, x) => targets.Add(o));
             return targets;
+        }
+
+        public static List<GameObject> Collect<T1, T2>(this IEntities entities)
+        {
+            var collection1 = entities.Collect<T1>();
+            var collection2 = entities.Collect<T2>();
+            return collection1.Intersect(collection2).ToList();
         }
     }
 }

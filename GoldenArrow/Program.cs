@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GoldenArrow.Scenes;
+using GoldenArrow.Scenes.Demos;
 using Microsoft.Xna.Framework.Input;
 using MonoDragons.Core.Audio;
 using MonoDragons.Core.EngimaDragons;
@@ -11,6 +12,7 @@ using MonoDragons.Core.KeyboardControls;
 using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
+using MonoGame.Cards.Hands;
 using MonoGame.Cards.Scenes;
 
 namespace GoldenArrow
@@ -21,11 +23,12 @@ namespace GoldenArrow
         [STAThread]
         static void Main()
         {
-            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "Setup", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "Hand", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
             {
                 MouseSystems.RegisterAll(Entity.System);
                 SoundSystems.RegisterAll(Entity.System);
                 Entity.Register(new KeyboardInput());
+                Entity.Register(new HandDisplaying());
                 game.Run();
             }
         }
@@ -51,6 +54,7 @@ namespace GoldenArrow
                     { "Join", () => new JoinGame() },
                     { "Host", () => new HostGame() },
                     { "Lobby", () => new Lobby() },
+                    { "Hand", () => new HandScene() }
                 });
         }
     }

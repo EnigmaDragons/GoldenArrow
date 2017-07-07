@@ -42,12 +42,13 @@
     <Compile Include="Game\PlayerResources.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\Demos\HandScene.cs" />
     <Compile Include="Scenes\HostGame.cs" />
     <Compile Include="Scenes\JoinGame.cs" />
     <Compile Include="Scenes\MainMenu.cs" />
     <Compile Include="Scenes\SetupGame.cs" />
     <Compile Include="Scenes\Lobby.cs" />
-    <Compile Include="Scenes\TypingScene.cs" />
+    <Compile Include="Scenes\Demos\TypingScene.cs" />
     <Compile Include="UIFactory.cs" />
   </ItemGroup>
   <ItemGroup>

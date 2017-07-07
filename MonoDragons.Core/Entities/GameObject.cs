@@ -17,6 +17,7 @@ namespace MonoDragons.Core.Entities
             Id = id;
             IsEnabled = true;
             Transform = transform;
+            Add(transform);
         }
 
         public override bool Equals(object obj)

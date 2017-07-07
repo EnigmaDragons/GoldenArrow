@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoDragons.Core.Entities;
-using MonoDragons.Core.PhysicsEngine;
 using MonoDragons.Core.Scenes;
 
 namespace GoldenArrow.Scenes
