@@ -54,8 +54,8 @@ namespace MonoDragons.Core.PhysicsEngine
 
         public Vector2 Center
         {
-            get { return new Vector2(Location.X + (Size.Width / 2f), Location.Y + (Size.Height / 2f)); }
-            set { Location = new Vector2(value.X - (Size.Width / 2f), value.Y - (Size.Height / 2f)); }
+            get => new Vector2(Location.X + (Size.Width / 2f), Location.Y + (Size.Height / 2f));
+            set => Location = new Vector2(value.X - (Size.Width / 2f), value.Y - (Size.Height / 2f));
         }
 
         public bool Intersects(Point point)

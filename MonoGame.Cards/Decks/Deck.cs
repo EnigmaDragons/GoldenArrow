@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MonoDragons.Core.Common;
+using MonoDragons.Core.Entities;
 using MonoDragons.Core.PhysicsEngine;
 using MonoGame.Cards.Cards;
 
@@ -11,13 +12,15 @@ namespace MonoGame.Cards.Decks
     {
         private const string Empty = "Images/Decks/empty-black";
         private readonly List<Card> _cards;
+        private readonly Func<Card, GameObject> _materializeCard;
 
         public int Count => _cards.Count;
         public Sprite Sprite { get; } = new Sprite(Empty);
 
-        public Deck(IEnumerable<Card> cards)
+        public Deck(Func<Card, GameObject> materializeCard, IEnumerable<Card> cards)
         {
             _cards = cards.ToList();
+            _materializeCard = materializeCard;
             UpdateSprite();
         }
 
@@ -26,7 +29,7 @@ namespace MonoGame.Cards.Decks
             _cards.Shuffle();
         }
 
-        public Card Draw()
+        public GameObject Draw()
         {
             if (Count == 0)
                 throw new InvalidOperationException("No cards to draw");
@@ -34,7 +37,7 @@ namespace MonoGame.Cards.Decks
             var card = _cards[0];
             _cards.RemoveAt(0);
             UpdateSprite();
-            return card;
+            return _materializeCard(card);
         }
 
         private void UpdateSprite()

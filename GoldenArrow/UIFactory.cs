@@ -11,6 +11,7 @@ using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.PhysicsEngine;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Text;
+using MonoGame.Cards.Cards;
 
 namespace GoldenArrow
 {
@@ -76,6 +77,14 @@ namespace GoldenArrow
                         x.With<TypingInput>(y => y.IsActive = false);
                     }
                 });
+        }
+
+        public static GameObject CreateCard(Card card)
+        {
+            return Entity.Create(new Transform2(new Size2(256, 354)))
+                .Add(card)
+                .Add(card.Sprite)
+                .Add(new MouseDrag());
         }
     }
 }
