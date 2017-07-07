@@ -47,7 +47,7 @@ namespace MonoDragons.Core.KeyboardControls
             var tempkeys = Enum.GetValues(typeof(Keys)).Cast<Keys>().ToArray();
             for (var i = 0; i < tempkeys.Length; i++)
             {
-                if (i == 1 || i == 11 || (i > 26 && i < 63) || (i > 66 && i < 76) || i == 137 || i == 81) //get the keys listed above as well as A-Z
+                if (i == 1 || i == 11 || (i > 26 && i < 63) || (i > 66 && i < 77) || i == 137 || i == 81) //get the keys listed above as well as A-Z
                     keys.Add(tempkeys[i]); //fill our key array
             }
             IskeyUp = new bool[keys.Count];
