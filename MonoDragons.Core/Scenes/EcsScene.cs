@@ -17,6 +17,12 @@ namespace MonoDragons.Core.Scenes
             World.NavigateToScene(sceneName);
         }
 
+        protected void NavigateToScene(IScene scene)
+        {
+            Entity.Destroy(_objs);
+            World.NavigateToScene(scene);
+        }
+
         public void Init()
         {
             _objs.AddRange(CreateObjs());

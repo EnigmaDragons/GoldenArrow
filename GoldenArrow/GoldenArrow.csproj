@@ -39,16 +39,19 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Game\PlayerResources.cs" />
+    <Compile Include="Game\PlayerState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\Demos\HandScene.cs" />
+    <Compile Include="Scenes\GameSummary.cs" />
     <Compile Include="Scenes\HostGame.cs" />
+    <Compile Include="Scenes\InGame.cs" />
     <Compile Include="Scenes\JoinGame.cs" />
     <Compile Include="Scenes\MainMenu.cs" />
     <Compile Include="Scenes\SetupGame.cs" />
     <Compile Include="Scenes\Lobby.cs" />
-    <Compile Include="Scenes\Demos\TypingScene.cs" />
+    <Compile Include="Scenes\SilasDemoScene.cs" />
+    <Compile Include="Scenes\TimTestScene.cs" />
     <Compile Include="UIFactory.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,10 +66,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\Cards\food.jpg" />
-    <Content Include="Content\Images\Cards\gold.jpg" />
-    <Content Include="Content\Images\Cards\stone.jpg" />
-    <Content Include="Content\Images\Cards\wood.jpg" />
+    <Content Include="Content\Images\Cards\food.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Cards\gold.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Cards\stone.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Cards\wood.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Icons\building.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\Icons\food.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -18,7 +18,10 @@ namespace MonoDragons.Core.Common
             }
         }
 
-        public Optional() { }
+        public Optional()
+        {
+            HasValue = false;   
+        }
 
         public Optional(T value)
         {

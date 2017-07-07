@@ -49,12 +49,14 @@ namespace GoldenArrow
                     { "Logo", () => new LogoScene() },
                     { "MainMenu", () => new MainMenu() },
                     { "Table", () => new Table() },
-                    { "Typing", () => new TypingScene() },
+                    { "Silas", () => new SilasDemoScene() },
                     { "Setup", () => new SetupGame() },
                     { "Join", () => new JoinGame() },
                     { "Host", () => new HostGame() },
-                    { "Lobby", () => new Lobby() },
-                    { "Hand", () => new HandScene() }
+                    { "Hand", () => new HandScene() },
+                    { "InGame", () => new InGame() },
+                    { "GameSummary", () => new GameSummary() },
+                    { "TimTest", () => new TimTestScene() },
                 });
         }
     }

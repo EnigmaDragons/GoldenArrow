@@ -1,7 +1,4 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using MonoDragons.Core.Common;
 using MonoDragons.Core.Entities;
 
 namespace MonoDragons.Core.MouseControls

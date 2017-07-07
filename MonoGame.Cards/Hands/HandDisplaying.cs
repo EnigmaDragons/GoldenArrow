@@ -13,69 +13,77 @@ namespace MonoGame.Cards.Hands
     {
         public void Update(IEntities entities, TimeSpan delta)
         {
-            entities.Collect<Hand, FanOut>().ForEach(x => FanCards(entities, x));
+            entities.Collect<Hand, FanOut>().ForEach(x => FanCards(entities, x.Get<Transform2>(), x.Get<Hand>(), x.Get<FanOut>()));
         }
 
-        private void FanCards(IEntities entities, GameObject gameObj)
+        private void FanCards(IEntities entities, Transform2 transform, Hand hand, FanOut fanout)
         {
-            Hand hand = gameObj.Get<Hand>();
-            FanOut fanout = gameObj.Get<FanOut>();
-
-            if (hand.Count() == fanout.PreviousCardAmount)
+            if (hand.Count() == fanout.PreviousCardCount)
                 return;
-
-            var center = gameObj.Transform.Center;
-            int cardCount = hand.Count();
-            fanout.PreviousCardAmount = cardCount;
-            gameObj.Transform.Size = new Size2(fanout.WidthPerCard(cardCount), fanout.HeightPerCard(cardCount));
-            gameObj.Transform.Center = center;
-
-            if (cardCount == 0)
+            fanout.PreviousCardCount = hand.Count();
+            if (hand.Count() == 0)
                 return;
+            ResizeHand(transform, hand, fanout);
+            RepositionCards(entities, hand, CalculateCardPositions(GetCardSize(entities), transform, hand.Count()));
+        }
 
-            List<int> xPoints = null;
-            if (cardCount == 1)
-            {
-                xPoints = new List<int> { gameObj.Transform.Size.Width / 2 };
-            }
-            else
-            {
-                int cardWidth = 0;
-                entities.With<Card>(hand.Cards().First(), (obj, card) => cardWidth = obj.Transform.Size.Width);
-                int widthToDivide = gameObj.Transform.Size.Width - cardWidth;
-                int widthBetweenCenters = widthToDivide / (cardCount - 1);
-                xPoints = Enumerable.Range(0, cardCount)
-                    .Select(i => (cardWidth / 2) + (widthBetweenCenters * i)).ToList();
-            }
+        private void ResizeHand(Transform2 transform, Hand hand, FanOut fanout)
+        {
+            var center = transform.Center;
+            transform.Size = new Size2(fanout.WidthPerCard(hand.Count()), fanout.HeightPerCard(hand.Count()));
+            transform.Center = center;
+        }
 
-            List<int> yPoints = null;
-            if (cardCount <= 2)
-            {
-                yPoints = new List<int> { gameObj.Transform.Size.Height / 2 };
-            }
-            else
-            {
-                int cardHeight = 0;
-                entities.With<Card>(hand.Cards().First(), (obj, card) => cardHeight = obj.Transform.Size.Height);
-                int heightToDivide = gameObj.Transform.Size.Height - cardHeight;
-                int heightBetweenCenters = heightToDivide / (cardCount - 1);
-                yPoints = Enumerable.Range(0, (int)Math.Ceiling((double)cardCount / 2))
-                    .Select(i => (cardHeight / 2) + (heightBetweenCenters * i)).ToList();
-            }
-
-
-            List<int> orderedYPoints = new List<int>(yPoints.ToList());
-            orderedYPoints.Reverse();
-            orderedYPoints = orderedYPoints.Take(cardCount - yPoints.Count).Concat(yPoints).ToList();
-
-            List<Vector2> cardPositions = new List<Vector2>();
-            xPoints.ForEachIndex((point, i) => cardPositions.Add(new Vector2(point + gameObj.Transform.Location.X, orderedYPoints[i] + gameObj.Transform.Location.Y)));
-
+        private static void RepositionCards(IEntities entities, Hand hand, List<Vector2> positions)
+        {
             hand.Cards().ForEachIndex((cardId, i) => entities.With<Transform2>(cardId, (obj, CardTransform) =>
             {
-                CardTransform.Center = cardPositions[i];
+                CardTransform.Center = positions[i];
                 CardTransform.ZIndex = i;
             }));
+        }
+
+        private Size2 GetCardSize(IEntities entities)
+        {
+            return entities.Collect<Card>().First().Transform.Size;
+        }
+
+        private List<Vector2> CalculateCardPositions(Size2 cardSize, Transform2 transform, int cardCount)
+        {
+            return CalculateCardPositions(transform, 
+                CalculateXPoints(cardSize, transform, cardCount),
+                CalculateYPoints(cardSize, transform, cardCount));
+        }
+
+        private List<Vector2> CalculateCardPositions(Transform2 transform, List<int> xPoints, List<int> yPoints)
+        {
+            var cardPositions = new List<Vector2>();
+            xPoints.ForEachIndex((point, i) => cardPositions.Add(new Vector2(point + transform.Location.X, yPoints[i] + transform.Location.Y)));
+            return cardPositions;
+        }
+
+        private List<int> CalculateXPoints(Size2 cardSize, Transform2 transform, int cardCount)
+        {
+            return cardCount == 1 
+                ? new List<int> { transform.Size.Width / 2 }
+                : Enumerable.Range(0, cardCount)
+                    .Select(i => (cardSize.Width / 2) + ((transform.Size.Width - cardSize.Width) / (cardCount - 1) * i)).ToList();
+        }
+
+        private List<int> CalculateYPoints(Size2 cardSize, Transform2 transform, int cardCount)
+        {
+            return OrderYPoints(cardCount <= 2
+                ? new List<int> { transform.Size.Height / 2 } 
+                : Enumerable.Range(0, (int)Math.Ceiling((double)cardCount / 2))
+                    .Select(i => (cardSize.Height / 2) + ((transform.Size.Height - cardSize.Height) / (cardCount - 1) * i)).ToList(), 
+                cardCount);
+        }
+
+        private List<int> OrderYPoints(List<int> yPoints, int cardCount)
+        {
+            var orderedYPoints = new List<int>(yPoints.ToList());
+            orderedYPoints.Reverse();
+            return orderedYPoints.Take(cardCount - yPoints.Count).Concat(yPoints).ToList();
         }
     }
 }

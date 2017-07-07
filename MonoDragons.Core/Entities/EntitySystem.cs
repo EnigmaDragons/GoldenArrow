@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MonoDragons.Core.Common;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoDragons.Core.Entities
 {
@@ -30,9 +31,9 @@ namespace MonoDragons.Core.Entities
             _systems.ForEach(x => x.Update(_entities, delta));
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch sprites)
         {
-            _renderers.ForEach(x => x.Draw(_entities));
+            _renderers.ForEach(x => x.Draw(_entities, sprites));
         }
     }
 }

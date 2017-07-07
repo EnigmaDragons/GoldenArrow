@@ -65,7 +65,7 @@ namespace MonoDragons.Core.Engine
         protected override void Initialize()
         {
             InitDisplayIfNeeded();
-            // @todo #1 Bug: Update the GraphicsDeviceManager in the constructor, to avoid the window being mispositioned and visibly changing size
+            // @todo #1: Update the GraphicsDeviceManager in the constructor, to avoid the window being mispositioned and visibly changing size
             _display.Apply(_graphics);
             Window.Position = new Point(0, 0); // Delete this once the above issue is fixed 
             IsMouseVisible = true;
@@ -120,7 +120,7 @@ namespace MonoDragons.Core.Engine
             _sprites.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicClamp);
             World.DrawBackgroundColor(Color.Black);
             _currentScene?.Draw();
-            _ecs.Draw();
+            _ecs.Draw(_sprites);
             _metrics.Draw(Transform2.Zero);
             HideExternals();
             _sprites.End();
@@ -138,6 +138,12 @@ namespace MonoDragons.Core.Engine
         public void NavigateTo(string sceneName)
         {
             var scene = _sceneFactory.Create(sceneName);
+            scene.Init();
+            _currentScene = scene;
+        }
+
+        public void NavigateTo(IScene scene)
+        {
             scene.Init();
             _currentScene = scene;
         }

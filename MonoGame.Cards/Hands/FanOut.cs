@@ -4,6 +4,7 @@ namespace MonoGame.Cards.Hands
 {
     public class FanOut
     {
+        public int PreviousCardCount { get; set; }
         public Func<int, int> WidthPerCard { get; set; } = x =>
         {
             var result = 150;
