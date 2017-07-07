@@ -22,5 +22,10 @@ namespace MonoDragons.Core.Common
             for (var i = 0; i < coll.Count; i++)
                 indexAction(coll[i], i);
         }
+
+        public static List<T> AsList<T>(this T obj)
+        {
+            return new List<T> {obj};
+        }
     }
 }
