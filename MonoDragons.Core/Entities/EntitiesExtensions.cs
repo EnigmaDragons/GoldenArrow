@@ -18,6 +18,15 @@ namespace MonoDragons.Core.Entities
             Where(entities, o => o.Transform.Intersects(point), action);
         }
 
+        public static void WithTopMost<T>(this IEntities entities, Point point, Action<T> action)
+        {
+            Collect<T>(entities)
+                .Where(o => o.Transform.Intersects(point))
+                .OrderByDescending(o => o.Transform.ZIndex)
+                .FirstAsOptional()
+                .IfPresent(o => o.With(action));
+        }
+
         public static void Where<T>(this IEntities entities, Predicate<GameObject> condition, Action<T> action)
         {
             var targets = new List<GameObject>();

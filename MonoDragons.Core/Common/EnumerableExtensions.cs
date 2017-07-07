@@ -27,5 +27,10 @@ namespace MonoDragons.Core.Common
         {
             return new List<T> {obj};
         }
+
+        public static Optional<T> FirstAsOptional<T>(this IEnumerable<T> collection)
+        {
+            return collection.FirstOrDefault();
+        }
     }
 }
