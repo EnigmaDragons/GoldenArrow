@@ -11,6 +11,9 @@ namespace MonoDragons.Core.MouseControls
         {
             _mouse = _mouse.Current();
 
+            if (!_mouse.IsOnGameScreen)
+                return;
+
             entities.With<MouseStateActions>((o, m) =>
             {
                 if (!o.Transform.Intersects(_mouse.Position))
