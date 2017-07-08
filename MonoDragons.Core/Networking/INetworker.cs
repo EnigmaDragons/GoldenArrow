@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MonoDragons.Core.Common;
+using System;
 
 namespace MonoDragons.Core.Networking
 {
@@ -9,5 +10,6 @@ namespace MonoDragons.Core.Networking
         int ConnectionsCount { get; }
         bool IsFull { get; }
         long Latency { get; }
+        Optional<bool> Successful { get; }
     }
 }

@@ -2,11 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoDragons.Core.PhysicsEngine;
 using MonoDragons.Core.Engine;
+using System.Collections.Generic;
+using MonoDragons.Core.Graphics;
 
-namespace MonoDragons.Core.UserInterface
+namespace MonoDragons.Core.Graphics
 {
     public class ConeTexture
     {
+        private static Dictionary<ConeTexture, Texture2D> CachedTextures = new Dictionary<ConeTexture, Texture2D>();
+
         private readonly Color _color;
         private readonly int _range;
         private readonly Rotation2 _angle;
@@ -18,8 +22,15 @@ namespace MonoDragons.Core.UserInterface
             _angle = angle;
         }
 
+        public static void ClearCache()
+        {
+            CachedTextures.Clear();
+        }
+
         public Texture2D Create()
         {
+            if (CachedTextures.ContainsKey(this))
+                return CachedTextures[this];
             var radius = _range;
             var radiusSq = radius * radius;
             var diam = radius * 2;
@@ -146,7 +157,24 @@ namespace MonoDragons.Core.UserInterface
             }
             var texture = new Texture2D(Hack.TheGame.GraphicsDevice, diam + 1, diam + 1);
             texture.SetData(colorData);
+            if (CachingRules.CacheTextures)
+                CachedTextures.Add(this, texture);
             return texture;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is ConeTexture) ? ((ConeTexture)obj).Equals(this) : false;
+        }
+
+        public bool Equals(ConeTexture other)
+        {
+            return _color.PackedValue.Equals(other._color.PackedValue) && _range == other._range && _angle.Equals(other._angle);
+        }
+
+        public override int GetHashCode()
+        {
+            return _range + (_angle.GetHashCode() << 8) + (_color.GetHashCode() << 12);
         }
     }
 }

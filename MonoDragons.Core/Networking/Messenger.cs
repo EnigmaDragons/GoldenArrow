@@ -22,6 +22,7 @@ namespace MonoDragons.Core.Networking
         public bool IsFull { get { return _networker.IsFull; } }
         public int ConnectionsCount { get { return _networker.ConnectionsCount; } }
         public long Latency { get { return _networker.Latency; } }
+        public Optional<bool> Successful => _networker.Successful;
 
         private Messenger(INetworker networker)
         {

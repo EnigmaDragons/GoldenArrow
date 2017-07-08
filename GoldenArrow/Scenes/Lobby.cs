@@ -30,7 +30,9 @@ namespace GoldenArrow.Scenes
                 .Create(new Transform2(new Vector2(700, 300), new Size2(200, 50)))
                 .Add(new TextDisplay
                 {
-                    Text = () => (_messenger.ConnectionsCount + 1) + " out of 4 players connected"
+                    Text = () => !_messenger.Successful.HasValue ? "Connecting ..."
+                        : _messenger.Successful.Value ? (_messenger.ConnectionsCount + 1) + " out of 4 players connected" : "Failed to Connect"
+
                 });
             yield return UIFactory.CreateButton(new Vector2(700, 500), "Leave", () => { _messenger.Dispose(); NavigateToScene("Setup"); });
         }

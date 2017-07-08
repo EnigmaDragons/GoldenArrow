@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Lidgren.Network;
 using Newtonsoft.Json;
 using System.Threading;
+using MonoDragons.Core.Common;
 
 namespace MonoDragons.Core.Networking
 {
@@ -15,11 +16,14 @@ namespace MonoDragons.Core.Networking
 
         private NetClient _client;
         private long _sent;
+        private NetConnection _connectionStatus;
 
         public Action<string> ReceivedCallback { get; set; } = (s) => { };
         public int ConnectionsCount { get; private set; }
         public bool IsFull { get; private set; }
         public long Latency { get; private set; } = -2;
+        public Optional<bool> Successful => _connectionStatus.Status == NetConnectionStatus.Connected ? new Optional<bool>(true)
+            : _connectionStatus.Status == NetConnectionStatus.Disconnected ? new Optional<bool>(false) : new Optional<bool>();
 
         public PeerToPeerClient()
         {
@@ -28,10 +32,10 @@ namespace MonoDragons.Core.Networking
 
         public void Init(string url, int port)
         {
+            _client.RegisterReceivedCallback(new SendOrPostCallback((a) => GetNewMessages()));
             _client.Start();
             NetOutgoingMessage hail = _client.CreateMessage("This is the hail message");
-            _client.Connect(url, port, hail);
-            _client.RegisterReceivedCallback(new SendOrPostCallback((a) => GetNewMessages()));
+            _connectionStatus = _client.Connect(url, port, hail);
         }
         
         public void Send(object item)
@@ -67,10 +71,14 @@ namespace MonoDragons.Core.Networking
                         ConnectionsCount = int.Parse(s.Substring(1, index - 1));
                         IsFull = ConnectionsCount == int.Parse(s.Substring(index + 1));
                     }
-
                 }
                 _client.Recycle(im);
             }
+        }
+
+        private void Pinger()
+        {
+
         }
 
         public void Dispose()

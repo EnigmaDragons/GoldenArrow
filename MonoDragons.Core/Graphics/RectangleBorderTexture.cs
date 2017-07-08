@@ -4,11 +4,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoDragons.Core.Engine;
 using MonoDragons.Core.PhysicsEngine;
+using System.Linq;
 
 namespace MonoDragons.Core.Graphics
 {
     public class RectangleBorderTexture
     {
+        private static Dictionary<RectangleBorderTexture, Texture2D> CachedTextures = new Dictionary<RectangleBorderTexture, Texture2D>();
+
         private readonly int _width;
         private readonly int _height;
         private readonly int _borderThickness;
@@ -27,8 +30,15 @@ namespace MonoDragons.Core.Graphics
             _borderColors = borderColors;
         }
 
+        public static void ClearCache()
+        {
+            CachedTextures.Clear();
+        }
+
         public Texture2D Create()
         {
+            if (CachedTextures.ContainsKey(this))
+                return CachedTextures[this];
             if (_borderColors == null || _borderColors.Count == 0) throw new ArgumentException("Must define at least one border color (up to three).");
             if (_borderThickness + _borderRadius > _height / 2 || _borderThickness + _borderRadius > _width / 2) throw new ArgumentException("Border will be too thick and/or rounded to fit on the texture.");
 
@@ -39,12 +49,15 @@ namespace MonoDragons.Core.Graphics
                     color[x + _width * y] = ColorBorder(x, y, _width, _height, _borderThickness, _borderRadius, _borderColors);
 
             texture.SetData(color);
+            if (CachingRules.CacheTextures)
+                CachedTextures.Add(this, texture);
             return texture;
         }
 
         private Color ColorBorder(int x, int y, int width, int height, int borderThickness, int borderRadius, List<Color> borderColors)
         {
-            var internalRectangle = new Rectangle((borderThickness + borderRadius), (borderThickness + borderRadius), width - 2 * (borderThickness + borderRadius), height - 2 * (borderThickness + borderRadius));
+            var internalRectangle = new Rectangle((borderThickness + borderRadius), (borderThickness + borderRadius),
+                width - 2 * (borderThickness + borderRadius), height - 2 * (borderThickness + borderRadius));
             if (internalRectangle.Contains(x, y))
                 return Color.Transparent;
 
@@ -106,6 +119,23 @@ namespace MonoDragons.Core.Graphics
             }
 
             return Color.Transparent;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is RectangleBorderTexture) ? ((RectangleBorderTexture)obj).Equals(this) : false;
+        }
+
+        public bool Equals(RectangleBorderTexture other)
+        {
+            return _borderColors.Select((c) => c.PackedValue).SequenceEqual(other._borderColors.Select((c) => c.PackedValue))
+                && _width == other._width && _height == other._height && _borderRadius == other._borderRadius
+                && _borderThickness == other._borderThickness;
+        }
+
+        public override int GetHashCode()
+        {
+            return _width + (_height << 4) + (_borderThickness << 8) + (_borderRadius << 16) + (_borderColors.GetHashCode() << 24);
         }
     }
 }

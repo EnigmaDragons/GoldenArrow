@@ -5,12 +5,15 @@ using System.Threading;
 using System.Collections.Concurrent;
 using System.Linq;
 using System;
+using MonoDragons.Core.Common;
 
 namespace MonoDragons.Core.Networking
 {
     public class PeerToPeerHost : INetworker
     {
         private const string ConnectionDenoter = "C";
+        private const string PingDenoter = "P";
+        private const string PongDenoter = "p";
         private const string NormalDenoter = " ";
         private const string ToEchoDenoter = "E";
         private const string EchoedDenoter = "e";
@@ -18,17 +21,29 @@ namespace MonoDragons.Core.Networking
         private NetPeerConfiguration _config { get { return _server.Configuration; } }
         private NetServer _server;
         private long _sent;
+        private bool _disposed = false;
 
         public Action<string> ReceivedCallback { get; set; } = (s) => { };
         public int ConnectionsCount { get { return _server.ConnectionsCount; } }
         public bool IsFull { get { return _config.MaximumConnections == _server.ConnectionsCount; } }
         public long Latency { get; private set; } = -2;
+        public Optional<bool> Successful { get; private set; } = new Optional<bool>();
 
         public void Init(int port, int maxConnections)
         {
             _server = new NetServer(new NetPeerConfiguration("chat") { Port = port, MaximumConnections = maxConnections });
-            _server.Start();
+            try
+            {
+                _server.Start();
+                Successful = new Optional<bool>(true);
+            }
+            catch
+            {
+                Successful = new Optional<bool>(false);
+            }
             _server.RegisterReceivedCallback(new SendOrPostCallback((a) => GetNewMessages()));
+            var t = new Thread(new ThreadStart(ConnectionTracker));
+            t.Start();
         }
 
         private void GetNewMessages()
@@ -38,7 +53,12 @@ namespace MonoDragons.Core.Networking
             {
                 if (im.MessageType == NetIncomingMessageType.StatusChanged && (NetConnectionStatus)im.ReadByte() == NetConnectionStatus.Connected)
                 {
-                    SendNewMessage(ConnectionDenoter + _server.ConnectionsCount + "/" + _config.MaximumConnections, _server.Connections);
+                    SendNewMessage(ConnectionDenoter + _server.ConnectionsCount + "/" + _config.MaximumConnections,
+                        new List<NetConnection>{ im.SenderConnection });
+                }
+                else if (im.MessageType == NetIncomingMessageType.DebugMessage)
+                {
+                    var x = im.ReadString();
                 }
                 else if (im.MessageType == NetIncomingMessageType.Data)
                 {
@@ -89,9 +109,24 @@ namespace MonoDragons.Core.Networking
             }
         }
 
+        private void ConnectionTracker()
+        {
+            var lastConnectionCount = 0;
+            while (!_disposed)
+            {
+                if(lastConnectionCount != ConnectionsCount)
+                {
+                    SendNewMessage(ConnectionDenoter + _server.ConnectionsCount + "/" + _config.MaximumConnections, _server.Connections);
+                    lastConnectionCount = ConnectionsCount;
+                }
+                Thread.Sleep(10);
+            }
+        }
+
         public void Dispose()
         {
             _server.Shutdown("Server Shutdown");
+            _disposed = true;
         }
     }
 }

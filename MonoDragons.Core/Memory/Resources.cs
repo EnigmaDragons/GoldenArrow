@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoDragons.Core.Scenes;
 using MonoDragons.Core.Text;
+using MonoDragons.Core.Graphics;
 
 namespace MonoDragons.Core.Memory
 {
@@ -31,6 +32,12 @@ namespace MonoDragons.Core.Memory
         public static void Unload()
         {
             _sceneContents.Dispose();
+            RectangleTexture.ClearCache();
+            RectangleBorderTexture.ClearCache();
+            LineTexture.ClearCache();
+            ConeTexture.ClearCache();
+            CometTexture.ClearCache();
+            CircleTexture.ClearCache();
             _sceneContents = new SceneContents(_game.Content);
             DefaultFont.Load(_game.Content);
         }
