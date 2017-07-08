@@ -17,11 +17,9 @@ namespace MonoGame.Cards.Scenes
         {
             Entity.Create(new Transform2(new Size2(1920, 1080)))
                 .Add(new Sprite("Images/Table/casino-felt"));
-            var card = new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds"} );
-            Create(new Vector2(10, 10), card);
 
             var deck = 
-                new Deck(
+                new Deck(Create,
                     new List<Card> {
                         new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }),
                         new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" })
@@ -36,12 +34,19 @@ namespace MonoGame.Cards.Scenes
                         Entity.Destroy(o);
                     }
                 })
-                .Add(x => new MouseStateActions { OnPressed = () => deck.If(deck.Count > 0, () => Create(x.Transform.Location, deck.Draw())) });
+                .Add(x => new MouseStateActions
+                {
+                    OnPressed = () => deck.If(deck.Count > 0, () =>
+                    {
+                        var drawnCard = deck.Draw();
+                        drawnCard.Transform.Location = x.Transform.Location;
+                    })
+                });
         }
 
-        private void Create(Vector2 location, Card card)
+        private GameObject Create(Card card)
         {
-            Entity.Create(new Transform2(location, Sizes.Card))
+            return Entity.Create(new Transform2(Sizes.Card))
                 .Add(card)
                 .Add(card.Sprite)
                 .Add(new MouseDrag())

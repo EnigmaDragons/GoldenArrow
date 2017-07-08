@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
+using MonoDragons.Core.Audio;
 using MonoDragons.Core.EngimaDragons;
 using MonoDragons.Core.Engine;
+using MonoDragons.Core.Entities;
 using MonoDragons.Core.Inputs;
+using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
 using MonoGame.Cards.Scenes;
@@ -16,7 +19,9 @@ namespace MonoGame.Cards
         [STAThread]
         static void Main()
         {
-            using (var game = new NeedlesslyComplexMainGame("MonoGame.Cards", "MainMenu", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            MouseSystems.RegisterAll(Entity.System);
+            SoundSystems.RegisterAll(Entity.System);
+            using (var game = new NeedlesslyComplexMainGame("MonoGame.Cards", "Table", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
                 game.Run();
         }
 

@@ -6,11 +6,15 @@ namespace MonoDragons.Core.PhysicsEngine
     {
         public static Transform2 Zero = new Transform2(Vector2.Zero, Size2.Zero);
 
-        public Vector2 Location { get; set; }
-        public Rotation2 Rotation { get; set;}
-        public float Scale { get; set; }
-        public Size2 Size { get; set; }
-        public int ZIndex { get; set; }
+        public Vector2 Location { get; set; } = Vector2.Zero;
+        public Rotation2 Rotation { get; set; } = Rotation2.None;
+        public float Scale { get; set; } = 1.0f;
+        public Size2 Size { get; set; } = Size2.Zero;
+        public int ZIndex { get; set; } = 1;
+
+        public Transform2()
+        {
+        }
 
         public Transform2(Rectangle rectangle)
             : this(new Vector2(rectangle.Location.X, rectangle.Location.Y), new Size2(rectangle.Size.X, rectangle.Size.Y)) { }
@@ -46,6 +50,12 @@ namespace MonoDragons.Core.PhysicsEngine
             Size = size;
             Scale = scale;
             ZIndex = zIndex;
+        }
+
+        public Vector2 Center
+        {
+            get { return new Vector2(Location.X + (Size.Width / 2f), Location.Y + (Size.Height / 2f)); }
+            set { Location = new Vector2(value.X - (Size.Width / 2f), value.Y - (Size.Height / 2f)); }
         }
 
         public bool Intersects(Point point)

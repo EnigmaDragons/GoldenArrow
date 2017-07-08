@@ -16,6 +16,9 @@ namespace MonoDragons.Core.MouseControls
         {
             _mouse = _mouse.Current();
 
+            if (!_mouse.IsOnGameScreen)
+                return;
+
             if (_mouse.LeftStillPressed)
                 UpdateTarget();
             if (_mouse.LeftButtonJustPressed)
@@ -30,7 +33,7 @@ namespace MonoDragons.Core.MouseControls
                 t => t.With<MouseDrag>(m =>
                 {
                     m.Drop(_mouse.Position);
-                    entities.WithIntersecting<MouseDropTarget>(m.DropPoint.Value, dt => dt.OnDrop(t));
+                    entities.WithTopMost<MouseDropTarget>(m.DropPoint.Value, dt => dt.OnDrop(t));
                 }));
             _targets.Clear();
         }

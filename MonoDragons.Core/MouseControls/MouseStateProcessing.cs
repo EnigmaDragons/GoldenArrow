@@ -1,7 +1,4 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using MonoDragons.Core.Common;
 using MonoDragons.Core.Entities;
 
 namespace MonoDragons.Core.MouseControls
@@ -13,6 +10,9 @@ namespace MonoDragons.Core.MouseControls
         public void Update(IEntities entities, TimeSpan delta)
         {
             _mouse = _mouse.Current();
+
+            if (!_mouse.IsOnGameScreen)
+                return;
 
             entities.With<MouseStateActions>((o, m) =>
             {

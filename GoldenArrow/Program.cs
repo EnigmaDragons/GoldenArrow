@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GoldenArrow.Scenes;
+using GoldenArrow.Scenes.Demos;
 using Microsoft.Xna.Framework.Input;
 using MonoDragons.Core.Audio;
 using MonoDragons.Core.EngimaDragons;
@@ -11,6 +12,7 @@ using MonoDragons.Core.KeyboardControls;
 using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
+using MonoGame.Cards.Hands;
 using MonoGame.Cards.Scenes;
 
 namespace GoldenArrow
@@ -26,6 +28,7 @@ namespace GoldenArrow
                 MouseSystems.RegisterAll(Entity.System);
                 SoundSystems.RegisterAll(Entity.System);
                 Entity.Register(new KeyboardInput());
+                Entity.Register(new HandDisplaying());
                 game.Run();
             }
         }
@@ -50,6 +53,7 @@ namespace GoldenArrow
                     { "Setup", () => new SetupGame() },
                     { "Join", () => new JoinGame() },
                     { "Host", () => new HostGame() },
+                    { "Hand", () => new HandScene() },
                     { "InGame", () => new InGame() },
                     { "GameSummary", () => new GameSummary() },
                     { "TimTest", () => new TimTestScene() },

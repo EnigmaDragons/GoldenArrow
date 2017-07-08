@@ -1,4 +1,7 @@
 ﻿
+using System.Collections.Generic;
+using System.Linq;
+
 namespace MonoGame.Cards.Hands
 {
     public class Hand
@@ -10,14 +13,29 @@ namespace MonoGame.Cards.Hands
             _data = data;
         }
 
-        public void Add(string card)
+        public void Add(int card)
         {
             _data.Cards.Add(card);
         }
 
-        public void Remove(string card)
+        public void Remove(int card)
         {
             _data.Cards.Remove(card);
+        }
+
+        public int Count()
+        {
+            return _data.Cards.Count;
+        }
+
+        public List<int> Cards()
+        {
+            return _data.Cards.ToList();
+        }
+
+        public string Player()
+        {
+            return _data.Player;
         }
     }
 }

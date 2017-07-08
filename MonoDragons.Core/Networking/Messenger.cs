@@ -18,10 +18,14 @@ namespace MonoDragons.Core.Networking
         private List<Message> messageHistory = new List<Message>();
         private List<Message> OutOfOrderMessages = new List<Message>();
         private List<object> UnsentMessages = new List<object>();
-        public Optional<string> CachedIPAddress = new Optional<string>();
-        public bool IsFull { get { return _networker.IsFull; } }
-        public int ConnectionsCount { get { return _networker.ConnectionsCount; } }
-        public long Latency { get { return _networker.Latency; } }
+        private MyIP _ip = new MyIP();
+
+        public Optional<string> CachedIPAddress => _ip.CachedIPAddress;
+        public bool IsFull => _networker.IsFull;
+        public int ConnectionsCount => _networker.ConnectionsCount;
+        public List<string> ConnectionNames => _networker.ConnectionNames;
+        public string YourName => _networker.YourName;
+        public long Latency => _networker.Latency;
         public Optional<bool> Successful => _networker.Successful;
 
         private Messenger(INetworker networker)
@@ -30,17 +34,17 @@ namespace MonoDragons.Core.Networking
             _networker.ReceivedCallback = ReceivedMessage;
         }
 
-        public static Messenger CreateClient(string url, int port)
+        public static Messenger CreateClient(string url, int port, string name)
         {
             var messenger = new PeerToPeerClient();
-            messenger.Init(url, port);
+            messenger.Init(url, port, name);
             return new Messenger(messenger);
         }
         
-        public static Messenger CreateHost(int port, int maxConnections = 1000)
+        public static Messenger CreateHost(int port, string name, int maxConnections = 1000)
         {
             var messenger = new PeerToPeerHost();
-            messenger.Init(port, maxConnections);
+            messenger.Init(port, name, maxConnections);
             return new Messenger(messenger);
         }
 
@@ -68,24 +72,34 @@ namespace MonoDragons.Core.Networking
             {
                 World.Publish(message.Value);
                 messageHistory.Add(message);
-                while (OutOfOrderMessages.Exists((m) => m.Number == messageHistory.Count))
-                {
-                    var oldMessage = OutOfOrderMessages.Find((m) => m.Number == messageHistory.Count);
-                    OutOfOrderMessages.Remove(oldMessage);
-                    World.Publish(oldMessage.Value);
-                    messageHistory.Add(oldMessage);
-                }
-                if(OutOfOrderMessages.Count == 0)
-                    while (UnsentMessages.Count > 0)
-                    {
-                        var unsentMessage = new Message(messageHistory.Count, UnsentMessages[0]);
-                        UnsentMessages.RemoveAt(0);
-                        _networker.Send(unsentMessage);
-                        messageHistory.Add(unsentMessage);
-                    }
+                HandleExistingOutOfOrderMessages();
+                if (OutOfOrderMessages.Count == 0)
+                    SendUnsentMessages();
             }
             else if(message.Number > messageHistory.Count)
                 OutOfOrderMessages.Add(message);
+        }
+
+        private void SendUnsentMessages()
+        {
+            while (UnsentMessages.Count > 0)
+            {
+                var unsentMessage = new Message(messageHistory.Count, UnsentMessages[0]);
+                UnsentMessages.RemoveAt(0);
+                _networker.Send(unsentMessage);
+                messageHistory.Add(unsentMessage);
+            }
+        }
+
+        private void HandleExistingOutOfOrderMessages()
+        {
+            while (OutOfOrderMessages.Exists((m) => m.Number == messageHistory.Count))
+            {
+                var oldMessage = OutOfOrderMessages.Find((m) => m.Number == messageHistory.Count);
+                OutOfOrderMessages.Remove(oldMessage);
+                World.Publish(oldMessage.Value);
+                messageHistory.Add(oldMessage);
+            }
         }
 
         public void Dispose()
@@ -93,47 +107,14 @@ namespace MonoDragons.Core.Networking
             _networker.Dispose();
         }
 
-        public async void StartGetIPAddress()
+        public void StartGetIPAddress()
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://myexternalip.com/raw");
-            request.Method = "GET";
-            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
-            {
-                var stream = response.GetResponseStream();
-                var x = Encoding.UTF8.GetString(ExtractResponse(response.ContentLength, response.GetResponseStream()));
-                CachedIPAddress = new Optional<string>(x.Substring(0, x.IndexOf("\n")));
-            }
+            _ip.StartGetIPAddress();
         }
 
         public async Task<string> GetIPAddress()
         {
-            if (CachedIPAddress.HasValue)
-                return CachedIPAddress.Value;
-            
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://myexternalip.com/raw");
-            request.Method = "GET";
-            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
-            {
-                var stream = response.GetResponseStream();
-                CachedIPAddress = new Optional<string>(Encoding.UTF8.GetString(ExtractResponse(response.ContentLength, response.GetResponseStream())));
-                CachedIPAddress = new Optional<string>(CachedIPAddress.Value.Substring(0, CachedIPAddress.Value.IndexOf("/n")));
-                return CachedIPAddress.Value;
-            }
-        }
-
-        private byte[] ExtractResponse(long length, Stream stream)
-        {
-            byte[] data;
-            using (var mstrm = new MemoryStream())
-            {
-                var tempBuffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = stream.Read(tempBuffer, 0, tempBuffer.Length)) != 0)
-                    mstrm.Write(tempBuffer, 0, bytesRead);
-                mstrm.Flush();
-                data = mstrm.GetBuffer();
-            }
-            return data;
+            return await _ip.GetIPAddress();
         }
     }
 }

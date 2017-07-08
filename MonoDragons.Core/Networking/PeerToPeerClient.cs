@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Lidgren.Network;
+using System.Linq;
 using Newtonsoft.Json;
 using System.Threading;
 using MonoDragons.Core.Common;
@@ -20,6 +21,8 @@ namespace MonoDragons.Core.Networking
 
         public Action<string> ReceivedCallback { get; set; } = (s) => { };
         public int ConnectionsCount { get; private set; }
+        public List<string> ConnectionNames { get; private set; } = new List<string>();
+        public string YourName { get; private set; }
         public bool IsFull { get; private set; }
         public long Latency { get; private set; } = -2;
         public Optional<bool> Successful => _connectionStatus.Status == NetConnectionStatus.Connected ? new Optional<bool>(true)
@@ -30,11 +33,12 @@ namespace MonoDragons.Core.Networking
             _client = new NetClient(new NetPeerConfiguration("chat") { AutoFlushSendQueue = false });
         }
 
-        public void Init(string url, int port)
+        public void Init(string url, int port, string name)
         {
+            YourName = name;
             _client.RegisterReceivedCallback(new SendOrPostCallback((a) => GetNewMessages()));
             _client.Start();
-            NetOutgoingMessage hail = _client.CreateMessage("This is the hail message");
+            NetOutgoingMessage hail = _client.CreateMessage(name);
             _connectionStatus = _client.Connect(url, port, hail);
         }
         
@@ -67,18 +71,17 @@ namespace MonoDragons.Core.Networking
                         ReceivedCallback(s.Substring(1));
                     else if (s.Substring(0, 1) == ConnectionDenoter)
                     {
-                        var index = s.IndexOf("/");
-                        ConnectionsCount = int.Parse(s.Substring(1, index - 1));
-                        IsFull = ConnectionsCount == int.Parse(s.Substring(index + 1));
+                        var maxConnectionsAndNames = s.Substring(1).Split('\"').ToList();
+                        var max = int.Parse(maxConnectionsAndNames[0]);
+                        maxConnectionsAndNames.RemoveAt(0);
+                        maxConnectionsAndNames.Remove(YourName);
+                        ConnectionsCount = maxConnectionsAndNames.Count;
+                        ConnectionNames = new List<string>(maxConnectionsAndNames);
+                        IsFull = max == ConnectionsCount;
                     }
                 }
                 _client.Recycle(im);
             }
-        }
-
-        private void Pinger()
-        {
-
         }
 
         public void Dispose()

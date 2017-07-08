@@ -12,8 +12,6 @@ namespace MonoDragons.Core.Networking
     public class PeerToPeerHost : INetworker
     {
         private const string ConnectionDenoter = "C";
-        private const string PingDenoter = "P";
-        private const string PongDenoter = "p";
         private const string NormalDenoter = " ";
         private const string ToEchoDenoter = "E";
         private const string EchoedDenoter = "e";
@@ -22,25 +20,31 @@ namespace MonoDragons.Core.Networking
         private NetServer _server;
         private long _sent;
         private bool _disposed = false;
+        private Dictionary<long, string> _connectionIDToName = new Dictionary<long, string>();
 
         public Action<string> ReceivedCallback { get; set; } = (s) => { };
-        public int ConnectionsCount { get { return _server.ConnectionsCount; } }
-        public bool IsFull { get { return _config.MaximumConnections == _server.ConnectionsCount; } }
+        public int ConnectionsCount => _server.ConnectionsCount;
+        public List<string> ConnectionNames => _server.Connections.Select((c) =>  _connectionIDToName[c.RemoteUniqueIdentifier]).ToList();
+        public string YourName { get; private set; }
+        public bool IsFull => _config.MaximumConnections == _server.ConnectionsCount;
         public long Latency { get; private set; } = -2;
         public Optional<bool> Successful { get; private set; } = new Optional<bool>();
 
-        public void Init(int port, int maxConnections)
+        public void Init(int port, string name, int maxConnections)
         {
+            YourName = name;
             _server = new NetServer(new NetPeerConfiguration("chat") { Port = port, MaximumConnections = maxConnections });
+            _config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             try
             {
                 _server.Start();
-                Successful = new Optional<bool>(true);
             }
             catch
             {
                 Successful = new Optional<bool>(false);
             }
+            Successful = new Optional<bool>(true);
+            _connectionIDToName.Add(_server.UniqueIdentifier, name);
             _server.RegisterReceivedCallback(new SendOrPostCallback((a) => GetNewMessages()));
             var t = new Thread(new ThreadStart(ConnectionTracker));
             t.Start();
@@ -51,10 +55,24 @@ namespace MonoDragons.Core.Networking
             NetIncomingMessage im;
             while ((im = _server.ReadMessage()) != null)
             {
-                if (im.MessageType == NetIncomingMessageType.StatusChanged && (NetConnectionStatus)im.ReadByte() == NetConnectionStatus.Connected)
+                if (im.MessageType == NetIncomingMessageType.ConnectionApproval)
                 {
-                    SendNewMessage(ConnectionDenoter + _server.ConnectionsCount + "/" + _config.MaximumConnections,
-                        new List<NetConnection>{ im.SenderConnection });
+                    string s = im.ReadString();
+                    if (!_connectionIDToName.ContainsValue(s))
+                    {
+                        _connectionIDToName.Add(im.SenderConnection.RemoteUniqueIdentifier, s);
+                        im.SenderConnection.Approve();
+                    }
+                    else if (_connectionIDToName.ContainsKey(im.SenderConnection.RemoteUniqueIdentifier)
+                        && _connectionIDToName[im.SenderConnection.RemoteUniqueIdentifier] == s)
+                            im.SenderConnection.Approve();
+                    else
+                        im.SenderConnection.Deny();
+
+                }
+                else if (im.MessageType == NetIncomingMessageType.StatusChanged && (NetConnectionStatus)im.ReadByte() == NetConnectionStatus.Connected)
+                {
+                    SendNewMessage(GetConnectionMessage(), new List<NetConnection> { im.SenderConnection });
                 }
                 else if (im.MessageType == NetIncomingMessageType.DebugMessage)
                 {
@@ -78,6 +96,11 @@ namespace MonoDragons.Core.Networking
                 }
                 _server.Recycle(im);
             }
+        }
+
+        private string GetConnectionMessage()
+        {
+            return ConnectionDenoter + _config.MaximumConnections + "\"" + String.Join("\"", ConnectionNames) + "\"" + YourName;
         }
 
         private void RelayAndRespondToMessage(NetIncomingMessage im, string s)
@@ -116,7 +139,7 @@ namespace MonoDragons.Core.Networking
             {
                 if(lastConnectionCount != ConnectionsCount)
                 {
-                    SendNewMessage(ConnectionDenoter + _server.ConnectionsCount + "/" + _config.MaximumConnections, _server.Connections);
+                    SendNewMessage(GetConnectionMessage(), _server.Connections);
                     lastConnectionCount = ConnectionsCount;
                 }
                 Thread.Sleep(10);
