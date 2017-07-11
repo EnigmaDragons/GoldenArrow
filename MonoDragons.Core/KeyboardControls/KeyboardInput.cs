@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 using Microsoft.Xna.Framework.Input;
 using MonoDragons.Core.Common;
 using MonoDragons.Core.Entities;
@@ -78,9 +79,9 @@ namespace MonoDragons.Core.KeyboardControls
                         }
                         if (i >= 12 && i <= 37)
                         {
-                            if (state.IsKeyDown(Keys.RightShift) || state.IsKeyDown(Keys.LeftShift))
+                            if ((state.IsKeyDown(Keys.RightShift) || state.IsKeyDown(Keys.LeftShift)) != Console.CapsLock)
                                 _newInputs.Add(key.ToString());
-                            else _newInputs.Add(key.ToString().ToLower()); //return the lowercase char is shift is up.
+                            else _newInputs.Add(key.ToString().ToLower());
                         }
                     }
                     IskeyUp[i] = false; //make sure we know the key is pressed
