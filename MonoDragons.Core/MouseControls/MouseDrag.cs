@@ -6,7 +6,7 @@ namespace MonoDragons.Core.MouseControls
 {
     public sealed class MouseDrag
     {
-        public Func<bool> CanDrag { get; set; } = () => true;
+        public Func<bool> IsEnabled { get; set; } = () => true;
 
         public bool IsBeingDragged { get; private set; }
         public Point LastDragPoint { get; private set; }
@@ -15,7 +15,7 @@ namespace MonoDragons.Core.MouseControls
 
         public void UpdateDragPoint(Point location)
         {
-            if (!CanDrag())
+            if (!IsEnabled())
                 return;
 
             IsBeingDragged = true;
