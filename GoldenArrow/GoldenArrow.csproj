@@ -40,6 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Game\DraftPack.cs" />
+    <Compile Include="Game\DraftSystem.cs" />
     <Compile Include="Game\PlayerState.cs" />
     <Compile Include="Layers.cs" />
     <Compile Include="Program.cs" />

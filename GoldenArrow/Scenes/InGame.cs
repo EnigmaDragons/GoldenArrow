@@ -21,13 +21,13 @@ namespace GoldenArrow.Scenes
     {
         protected override IEnumerable<GameObject> CreateObjs()
         {
-            List<Card> cards = new List<Card>();
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/stone", Back = "Cards/back-basic" })));
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/gold", Back = "Cards/back-basic" })));
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/food", Back = "Cards/back-basic" })));
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => new Card(new CardData { Name = "Stone", Front = "Cards/wood", Back = "Cards/back-basic" })));
+            Items cards = new Items();
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Cards/stone", Back = "Cards/back-basic" }))));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Cards/gold", Back = "Cards/back-basic" }))));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Cards/food", Back = "Cards/back-basic" }))));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Cards/wood", Back = "Cards/back-basic" }))));
             cards.Shuffle();
-            var deck = new Deck(UIFactory.CreateCard, cards);
+            var deck = new Deck(cards);
             return CreateTable()
                 .Concat(CreatePlayerResourceBar(new Vector2(100, 100), new PlayerState(1)))
                 .Concat(CreatePlayerResourceBar(new Vector2(100, 200), new PlayerState(2)))

@@ -9,7 +9,7 @@ namespace MonoDragons.Core.Entities
         private readonly Map<Type, object> _components = new Map<Type, object>();
 
         public int Id { get; }
-        public bool IsEnabled { get; }
+        public bool IsEnabled { get; set; }
         public Transform2 Transform { get; }
 
         internal GameObject(int id, Transform2 transform)
