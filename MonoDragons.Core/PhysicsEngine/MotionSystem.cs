@@ -3,7 +3,7 @@ using MonoDragons.Core.Entities;
 
 namespace MonoDragons.Core.PhysicsEngine
 {
-    public class MotionSystem : ISystem
+    public sealed class MotionSystem : ISystem
     {
         public void Update(IEntities entities, TimeSpan delta)
         {
