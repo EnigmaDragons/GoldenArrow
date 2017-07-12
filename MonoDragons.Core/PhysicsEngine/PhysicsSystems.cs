@@ -9,6 +9,7 @@ namespace MonoDragons.Core.PhysicsEngine
             system.Register(new ZGravitation());
             system.Register(new BoxCollision());
             system.Register(new MotionSystem());
+            system.Register(new Travelling());
         }
     }
 }

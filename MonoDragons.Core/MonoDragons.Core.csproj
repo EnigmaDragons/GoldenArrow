@@ -114,6 +114,8 @@
     <Compile Include="Networking\Messenger.cs" />
     <Compile Include="Networking\PeerToPeerClient.cs" />
     <Compile Include="Networking\PeerToPeerHost.cs" />
+    <Compile Include="PhysicsEngine\DurationTravel.cs" />
+    <Compile Include="PhysicsEngine\Travelling.cs" />
     <Compile Include="PhysicsEngine\ZGravitation.cs" />
     <Compile Include="PhysicsEngine\ZGravity.cs" />
     <Compile Include="Players\Owner.cs" />
