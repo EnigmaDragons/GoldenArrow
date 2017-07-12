@@ -30,21 +30,23 @@ namespace MonoDragons.Core.MouseControls
         private void DropTarget(IEntities entities)
         {
             _targets.ForEach(
-                t => t.With<MouseDrag>(m =>
-                {
-                    m.Drop(_mouse.Position);
-                    entities.WithTopMost<MouseDropTarget>(m.DropPoint.Value, dt => dt.OnDrop(t));
-                }));
+                t => t.With<MouseDrag>(m => m.If(m.CanDrag(),
+                    () => {
+                        m.Drop(_mouse.Position);
+                        entities.WithTopMost<MouseDropTarget>(m.DropPoint.Value, dt => dt.OnDrop(t));
+                })));
             _targets.Clear();
         }
 
         private void UpdateTarget()
         {
-            _targets.ForEach(t =>
-            {
-                t.Transform.Location += _mouse.MovedBy.ToVector2();
-                t.With<MouseDrag>(m => m.DragPoint = _mouse.Position);
-            });
+            _targets.ForEach(
+                t =>  t.With<MouseDrag>(m => m.If(m.CanDrag(), 
+                    () => {
+                        m.UpdateDragPoint(_mouse.Position);
+                        t.Transform.Location += _mouse.MovedBy.ToVector2();
+                    }))
+                );
         }
 
         private void SelectTarget(IEntities entities)

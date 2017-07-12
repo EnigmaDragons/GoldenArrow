@@ -23,7 +23,7 @@ namespace GoldenArrow
         [STAThread]
         static void Main()
         {
-            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "MainMenu", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
+            using (var game = new NeedlesslyComplexMainGame("Golden Arrow", "CardAnimation", new Display(1600, 900, false, 1), CreateSceneFactory(), CreateController()))
             {
                 MouseSystems.RegisterAll(Entity.System);
                 SoundSystems.RegisterAll(Entity.System);
@@ -57,6 +57,8 @@ namespace GoldenArrow
                     { "InGame", () => new InGame() },
                     { "GameSummary", () => new GameSummary() },
                     { "TimTest", () => new TimTestScene() },
+                    { "CardOwners", () => new CardOwners() },
+                    { "CardAnimation", () => new CardAnimation() },
                 });
         }
     }

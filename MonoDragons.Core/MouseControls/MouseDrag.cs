@@ -1,17 +1,24 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using MonoDragons.Core.Common;
 
 namespace MonoDragons.Core.MouseControls
 {
     public sealed class MouseDrag
     {
-        public bool IsBeingDragged { get; set; }
-        public Point LastDragPoint { get; set; }
-        public Point DragPoint { get; set; }
-        public Optional<Point> DropPoint { get; set; }
+        public Func<bool> CanDrag { get; set; } = () => true;
+
+        public bool IsBeingDragged { get; private set; }
+        public Point LastDragPoint { get; private set; }
+        public Point DragPoint { get; private set; }
+        public Optional<Point> DropPoint { get; private set; }
 
         public void UpdateDragPoint(Point location)
         {
+            if (!CanDrag())
+                return;
+
+            IsBeingDragged = true;
             LastDragPoint = DragPoint;
             DragPoint = location;
         }

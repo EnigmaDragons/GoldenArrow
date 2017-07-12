@@ -6,7 +6,8 @@ namespace MonoDragons.Core.MouseControls
     {
         private MouseState CurrentState { get; set; } = MouseState.None;
         private DateTime ClickedAt { get; set; } = DateTime.MinValue;
-        
+
+        public Func<bool> IsEnabled { get; set; } = () => true;
         public Action OnReleased { get; set; } = () => {};
         public Action OnHover { get; set; } = () => {};
         public Action OnPressed { get; set; } = () => {};
@@ -14,12 +15,18 @@ namespace MonoDragons.Core.MouseControls
 
         public void Hover()
         {
+            if (!IsEnabled())
+                return;
+
             OnHover();
             CurrentState = MouseState.Hovered;
         }
 
         public void Exit()
         {
+            if (!IsEnabled())
+                return;
+
             if (CurrentState != MouseState.None)
                 OnExit();
             CurrentState = MouseState.None;
@@ -27,6 +34,9 @@ namespace MonoDragons.Core.MouseControls
 
         public void Click()
         {
+            if (!IsEnabled())
+                return;
+
             ClickedAt = DateTime.Now;
             OnPressed();
             CurrentState = MouseState.Pressed;
@@ -34,6 +44,9 @@ namespace MonoDragons.Core.MouseControls
 
         public void Release()
         {
+            if (!IsEnabled())
+                return;
+
             OnHover();
             if ((DateTime.Now - ClickedAt).Milliseconds < 150)
                 OnReleased();

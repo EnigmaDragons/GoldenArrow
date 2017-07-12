@@ -54,6 +54,7 @@
     <Compile Include="Audio\Sounds.cs" />
     <Compile Include="Audio\SoundsPlayer.cs" />
     <Compile Include="Audio\SoundSystems.cs" />
+    <Compile Include="Common\Condition.cs" />
     <Compile Include="Engine\Automation.cs" />
     <Compile Include="Engine\IControl.cs" />
     <Compile Include="Engine\ISpatialVisual.cs" />
@@ -114,6 +115,12 @@
     <Compile Include="Networking\Messenger.cs" />
     <Compile Include="Networking\PeerToPeerClient.cs" />
     <Compile Include="Networking\PeerToPeerHost.cs" />
+    <Compile Include="PhysicsEngine\DurationTravel.cs" />
+    <Compile Include="PhysicsEngine\Travelling.cs" />
+    <Compile Include="PhysicsEngine\ZGravitation.cs" />
+    <Compile Include="PhysicsEngine\ZGravity.cs" />
+    <Compile Include="Players\Owner.cs" />
+    <Compile Include="Players\SimplePlayer.cs" />
     <Compile Include="Render\BorderRenderer.cs" />
     <Compile Include="Render\BorderTexture.cs" />
     <Compile Include="Render\Texture.cs" />

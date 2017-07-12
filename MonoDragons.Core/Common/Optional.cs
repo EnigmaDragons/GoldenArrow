@@ -29,6 +29,11 @@ namespace MonoDragons.Core.Common
             HasValue = value != null;
         }
 
+        public override string ToString()
+        {
+            return HasValue ? _value.ToString() : "Nothing";
+        }
+
         public bool IsTrue(Predicate<T> condition)
         {
             return HasValue && condition(_value);
