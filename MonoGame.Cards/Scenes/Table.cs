@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoDragons.Core.Common;
 using MonoDragons.Core.Entities;
@@ -32,7 +31,6 @@ namespace MonoGame.Cards.Scenes
                     OnEnter = () => x.With<Sprite>(s => s.Name = "Images/Cards/wood"),
                     OnExit = () => x.With<Sprite>(s => s.Name = "Images/Cards/stone"),
                     OnDrop = o => deck.PutFacedownOnTop(o)
-                    
                 })
                 .Add(x => new MouseStateActions
                 {
