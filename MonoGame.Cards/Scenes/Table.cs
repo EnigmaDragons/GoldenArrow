@@ -30,7 +30,7 @@ namespace MonoGame.Cards.Scenes
                     OnEnter = () => x.With<Sprite>(s => s.Name = "Images/Cards/wood"),
                     OnExit = () => x.With<Sprite>(s => s.Name = "Images/Cards/stone"),
                     OnDrop = o => {
-                        deck.PutFacedownOnTop(o.Get<Card>());
+                        deck.PutFacedownOnTop(o);
                         Entity.Destroy(o);
                     }
                 })
