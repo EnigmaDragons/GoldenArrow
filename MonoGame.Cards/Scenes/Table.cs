@@ -18,21 +18,20 @@ namespace MonoGame.Cards.Scenes
             Entity.Create(new Transform2(new Size2(1920, 1080)))
                 .Add(new Sprite("Images/Table/casino-felt"));
 
-            var deck = 
-                new Deck(Create,
-                    new List<Card> {
-                        new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }),
-                        new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" })
-                    });
+            var cards = new Items();
+            cards.Add(Create(new Card(new CardData {Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds"})));
+            cards.Add(Create(new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" })));
+            cards.Add(Create(new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" })));
+
+            var deck = new Deck(cards);
             Entity.Create(new Transform2(new Vector2(200, 200), Sizes.Card))
+                .Add(cards)
                 .Add(deck.Sprite)
                 .Add(x => new MouseDropTarget {
                     OnEnter = () => x.With<Sprite>(s => s.Name = "Images/Cards/wood"),
                     OnExit = () => x.With<Sprite>(s => s.Name = "Images/Cards/stone"),
-                    OnDrop = o => {
-                        deck.PutFacedownOnTop(o);
-                        Entity.Destroy(o);
-                    }
+                    OnDrop = o => deck.PutFacedownOnTop(o)
+                    
                 })
                 .Add(x => new MouseStateActions
                 {

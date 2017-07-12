@@ -6,14 +6,14 @@ namespace MonoDragons.Core.Entities
 {
     public class Items : IList<GameObject>
     {
-        private readonly List<GameObject> _objList = new List<GameObject>();
+        private readonly List<GameObject> _items = new List<GameObject>();
 
-        public int Count => _objList.Count;
+        public int Count => _items.Count;
         public bool IsReadOnly => false;
 
         public IEnumerator<GameObject> GetEnumerator()
         {
-            return _objList.GetEnumerator();
+            return _items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -25,32 +25,32 @@ namespace MonoDragons.Core.Entities
         {
             if (Contains(item))
                 Remove(item);
-            _objList.Add(item);
+            _items.Add(item);
         }
 
         public void Clear()
         {
-            _objList.Clear();
+            _items.Clear();
         }
 
         public bool Contains(GameObject item)
         {
-            return _objList.Any(x => x.Id == item.Id);
+            return _items.Any(x => x.Id == item.Id);
         }
 
         public void CopyTo(GameObject[] array, int arrayIndex)
         {
-            _objList.CopyTo(array, arrayIndex);
+            _items.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(GameObject item)
         {
-            return _objList.Remove(_objList.First(x => x.Id == item.Id));
+            return _items.Remove(_items.First(x => x.Id == item.Id));
         }
 
         public int IndexOf(GameObject item)
         {
-            return _objList.FindIndex(x => x.Id == item.Id);
+            return _items.FindIndex(x => x.Id == item.Id);
         }
 
         public void Insert(int index, GameObject item)
@@ -63,18 +63,24 @@ namespace MonoDragons.Core.Entities
             if (index == Count)
                 Add(item);
             else
-                _objList.Insert(index, item);
+                _items.Insert(index, item);
         }
 
         public void RemoveAt(int index)
         {
-            _objList.RemoveAt(index);
+            _items.RemoveAt(index);
         }
 
         public GameObject this[int index]
         {
-            get { return _objList[index]; }
+            get { return _items[index]; }
             set { Insert(index, value); }
+        }
+
+        public void AddRange(IEnumerable<GameObject> items)
+        {
+            foreach (var item in items)
+                Add(item);
         }
     }
 }

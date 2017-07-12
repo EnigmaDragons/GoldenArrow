@@ -17,6 +17,7 @@ namespace MonoGame.Cards.Decks
         public Deck(Items cards)
         {
             _cards = cards;
+            _cards.ForEach(x => x.IsEnabled = false);
             UpdateSprite();
         }
 
@@ -31,6 +32,7 @@ namespace MonoGame.Cards.Decks
                 throw new InvalidOperationException("No cards to draw");
 
             var card = _cards[0];
+            card.IsEnabled = true;
             _cards.RemoveAt(0);
             UpdateSprite();
             return card;
@@ -45,6 +47,7 @@ namespace MonoGame.Cards.Decks
         {
             card.Get<Card>().FaceUp = false;
             _cards.Insert(0, card);
+            card.IsEnabled = false;
             UpdateSprite();
         }
     }
