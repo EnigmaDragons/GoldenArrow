@@ -4,48 +4,25 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MonoDragons.Core.Networking
 {
     public class Messenger : IDisposable
     {
-        private INetworker _networker;
+        public static Messenger AppMessenger;
+
+        private IMessenger _networker;
         private List<Message> messageHistory = new List<Message>();
         private List<Message> OutOfOrderMessages = new List<Message>();
         private List<object> UnsentMessages = new List<object>();
-        private MyIP _ip = new MyIP();
+        public Optional<bool> ConnectionSuccessful => _networker.ConnectionSuccessful;
 
-        public Optional<string> CachedIPAddress => _ip.CachedIPAddress;
-        public bool IsFull => _networker.IsFull;
-        public int ConnectionsCount => _networker.ConnectionsCount;
-        public List<string> ConnectionNames => _networker.ConnectionNames;
-        public string YourName => _networker.YourName;
-        public long Latency => _networker.Latency;
-        public Optional<bool> Successful => _networker.Successful;
-
-        private Messenger(INetworker networker)
+        public Messenger(IMessenger networker)
         {
             _networker = networker;
             _networker.ReceivedCallback = ReceivedMessage;
-        }
-
-        public static Messenger CreateClient(string url, int port, string name)
-        {
-            var messenger = new PeerToPeerClient();
-            messenger.Init(url, port, name);
-            return new Messenger(messenger);
-        }
-        
-        public static Messenger CreateHost(int port, string name, int maxConnections = 1000)
-        {
-            var messenger = new PeerToPeerHost();
-            messenger.Init(port, name, maxConnections);
-            return new Messenger(messenger);
+            AppMessenger = this;
         }
 
         public void Send(object item)
@@ -56,13 +33,13 @@ namespace MonoDragons.Core.Networking
             {
                 var message = new Message(messageHistory.Count, item);
                 messageHistory.Add(message);
-                _networker.Send(message);
+                _networker.Send(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
             }
         }
 
-        private void ReceivedMessage(string json)
+        private void ReceivedMessage(byte[] bytesAsJson)
         {
-            JObject jObj = JsonConvert.DeserializeObject<JObject>(json);
+            JObject jObj = JsonConvert.DeserializeObject<JObject>(Encoding.UTF8.GetString(bytesAsJson));
             long number = jObj.Value<long>("Number");
             Type type = Type.GetType(jObj.Value<string>("Type"));
             JToken jToken = jObj.GetValue("Value");
@@ -86,7 +63,7 @@ namespace MonoDragons.Core.Networking
             {
                 var unsentMessage = new Message(messageHistory.Count, UnsentMessages[0]);
                 UnsentMessages.RemoveAt(0);
-                _networker.Send(unsentMessage);
+                _networker.Send(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(unsentMessage)));
                 messageHistory.Add(unsentMessage);
             }
         }
@@ -105,16 +82,6 @@ namespace MonoDragons.Core.Networking
         public void Dispose()
         {
             _networker.Dispose();
-        }
-
-        public void StartGetIPAddress()
-        {
-            _ip.StartGetIPAddress();
-        }
-
-        public async Task<string> GetIPAddress()
-        {
-            return await _ip.GetIPAddress();
         }
     }
 }
