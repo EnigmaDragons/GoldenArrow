@@ -81,10 +81,15 @@ namespace GoldenArrow
 
         public static GameObject CreateCard(Card card)
         {
-            return Entity.Create(new Transform2(new Size2(256, 354)))
+            return Entity.Create(new Transform2(CardSize()))
                 .Add(card)
                 .Add(card.Sprite)
                 .Add(new MouseDrag());
+        }
+
+        public static Size2 CardSize()
+        {
+            return new Size2(256, 354);
         }
     }
 }

@@ -40,10 +40,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Game\DraftPack.cs" />
+    <Compile Include="Game\DraftSystem.cs" />
     <Compile Include="Game\PlayerState.cs" />
     <Compile Include="Layers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\Demos\CardAnimation.cs" />
+    <Compile Include="Scenes\Demos\CardOwners.cs" />
     <Compile Include="Scenes\Demos\HandScene.cs" />
     <Compile Include="Scenes\GameSummary.cs" />
     <Compile Include="Scenes\HostGame.cs" />

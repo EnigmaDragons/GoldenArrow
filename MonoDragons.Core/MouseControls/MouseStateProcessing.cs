@@ -14,17 +14,19 @@ namespace MonoDragons.Core.MouseControls
             if (!_mouse.IsOnGameScreen)
                 return;
 
-            entities.With<MouseStateActions>((o, m) =>
-            {
-                if (!o.Transform.Intersects(_mouse.Position))
-                    m.Exit();
-                else if (!o.Transform.Intersects(_mouse.LastPosition))
-                    m.Hover();
-                else if (_mouse.ButtonJustPressed)
-                    m.Click();
-                else if (_mouse.ButtonJustReleased)
-                    m.Release();
-            });
+            entities.WithTopMost<MouseStateActions>(_mouse.Position, 
+                (o, m) =>
+                {
+                    if (!o.Transform.Intersects(_mouse.Position))
+                        m.Exit();
+                    else if (!o.Transform.Intersects(_mouse.LastPosition))
+                        m.Hover();
+                    else if (_mouse.ButtonJustPressed)
+                        m.Click();
+                    else if (_mouse.ButtonJustReleased)
+                        m.Release();
+                },
+                (o, m) => m.Exit());
         }
     }
 }

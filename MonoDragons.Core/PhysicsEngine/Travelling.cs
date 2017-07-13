@@ -3,12 +3,12 @@ using MonoDragons.Core.Entities;
 
 namespace MonoDragons.Core.PhysicsEngine
 {
-    public sealed class MotionSystem : ISystem
+    public sealed class Travelling : ISystem
     {
         public void Update(IEntities entities, TimeSpan delta)
         {
-            entities.With<Motion2>(
-                (o, m) => o.Transform.Location = o.Transform.Location + m.Velocity.GetDelta(delta));
+            entities.With<DurationTravel>(
+                (o, x) => o.Transform.Location = x.GetNewPosition(o.Transform.Location, delta));
         }
     }
 }
