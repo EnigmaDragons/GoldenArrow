@@ -1,28 +1,26 @@
 ﻿using System;
 using System.IO;
-using Newtonsoft.Json;
 
 namespace MonoDragons.Core.IO
 {
     public sealed class AppDataJsonIo
     {
         private readonly string _gameStorageFolder;
+        private readonly JsonIo _io = new JsonIo();
 
-        public AppDataJsonIo(string gaemFolderName)
+        public AppDataJsonIo(string gameFolderName)
         {
-            _gameStorageFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), gaemFolderName);
+            _gameStorageFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), gameFolderName);
         }
 
         public T Load<T>(string saveName)
         {
-            return JsonConvert.DeserializeObject<T>(File.ReadAllText(GetSavePath(saveName)));
+            return _io.Load<T>(GetSavePath(saveName));
         }
 
         public void Save(string saveName, object data)
         {
-            if (!Directory.Exists(_gameStorageFolder))
-                Directory.CreateDirectory(_gameStorageFolder);
-            File.WriteAllText(GetSavePath(saveName), JsonConvert.SerializeObject(data));
+            _io.Save(GetSavePath(saveName), data);
         }
 
         private string GetSavePath(string saveName)

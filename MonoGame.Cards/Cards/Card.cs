@@ -22,7 +22,7 @@ namespace MonoGame.Cards.Cards
         public Card(CardData data)
         {
             _data = data;
-            Sprite = new Sprite("Images/", data.Back);
+            Sprite = new Sprite("", data.Back);
         }
 
         public void Flip()

@@ -9,6 +9,7 @@ using MonoDragons.Core.Inputs;
 using MonoDragons.Core.MouseControls;
 using MonoDragons.Core.Render;
 using MonoDragons.Core.Scenes;
+using MonoGame.Cards.Decks;
 using MonoGame.Cards.Scenes;
 
 namespace MonoGame.Cards

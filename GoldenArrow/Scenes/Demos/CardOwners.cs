@@ -15,8 +15,8 @@ namespace GoldenArrow.Scenes.Demos
     {
         protected override IEnumerable<GameObject> CreateObjs()
         {
-            var stone = new Card(new CardData {Name = "Stone", Front = "Cards/stone", Back = "Cards/back-basic"});
-            var otherCard = new Card(new CardData {Name = "Stone", Front = "Cards/stone", Back = "Cards/back-basic"});
+            var stone = new Card(new CardData {Name = "Stone", Front = "Images/Cards/stone", Back = "Images/Cards/back-basic" });
+            var otherCard = new Card(new CardData {Name = "Stone", Front = "Images/Cards/stone", Back = "Images/Cards/back-basic" });
             yield return CreateCard(stone, Vector2.Zero, "bob", "bob");
             yield return CreateCard(otherCard, new Vector2(50, 50), "bob", "not bob");
         }
