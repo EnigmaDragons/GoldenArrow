@@ -25,6 +25,9 @@ namespace MonoDragons.Core.Networking
         private bool _awaitingEchoResponse = false;
         private long _pingSent = 0;
         private bool _awaitingPingResponse = false;
+        private Action _onConnectionFail;
+        private Action _onConnectionSuccess;
+        private bool _hasFinishedTryingToConnect = false;
 
         public LatencyMonitorMethod LatencyMonitor { get; set; }
         public int PingEveryMillis { get; set; } = 1000;
@@ -48,11 +51,18 @@ namespace MonoDragons.Core.Networking
 
         public static PeerToPeerClient CreateConnected(string url, int port)
         {
+            return CreateConnected(url, port, () => { }, () => { });
+        }
+
+        public static PeerToPeerClient CreateConnected(string url, int port, Action onConnectionSuccess, Action onConnectionFailed)
+        {
             var client = new PeerToPeerClient();
+            client._onConnectionSuccess = onConnectionSuccess;
+            client._onConnectionFail = onConnectionFailed;
             client.Init(url, port);
             return client;
         }
-        
+
         private void GetNewMessages()
         {
             NetIncomingMessage inMessage;
@@ -113,6 +123,9 @@ namespace MonoDragons.Core.Networking
                 Latency = NO_RESPONSE;
                 NoResponseCallback();
             }
+
+            if (!_hasFinishedTryingToConnect && ConnectionSuccessful.HasValue)
+                (ConnectionSuccessful.Value ? _onConnectionSuccess : _onConnectionFail)();
         }
 
         public void Send(byte[] bytes)

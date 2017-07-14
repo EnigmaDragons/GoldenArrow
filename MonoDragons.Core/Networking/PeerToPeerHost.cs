@@ -26,13 +26,18 @@ namespace MonoDragons.Core.Networking
         private bool _awaitingEchoResponse = false;
         private long _pingSent = 0;
         private bool _awaitingPingResponse = false;
+        private Action _onConnectionFail;
+        private Action _onConnectionSuccess;
+        private List<long> _lastConnections = new List<long> { };
 
         public LatencyMonitorMethod LatencyMonitor { get; set; }
         public int PingEveryMillis { get; set; } = 1000;
         public long Latency { get; private set; } = NOT_TESTED;
         public Action NoResponseCallback { private get; set; } = () => { };
         public Action<byte[]> ReceivedCallback { private get; set; } = (s) => { };
-        public IEnumerable<long> Connections => _server.Connections.Select((c) => c.RemoteUniqueIdentifier);
+        public List<long> Connections => _server.Connections.Select((c) => c.RemoteUniqueIdentifier).ToList();
+        public Action<long> OnConnect { private get; set; } = (a) => { };
+        public Action<long> OnDisconnect { private get; set; } = (a) => { };
         public Optional<bool> ConnectionSuccessful { get; private set; } = new Optional<bool>();
 
         private PeerToPeerHost() { }
@@ -48,13 +53,22 @@ namespace MonoDragons.Core.Networking
             catch
             {
                 ConnectionSuccessful = new Optional<bool>(false);
+                _onConnectionFail();
             }
             ConnectionSuccessful = new Optional<bool>(true);
+            _onConnectionSuccess();
         }
 
         public static PeerToPeerHost CreateConnected(int port, int maxConnections)
         {
+            return CreateConnected(port, maxConnections, () => { }, () => { });
+        }
+
+        public static PeerToPeerHost CreateConnected(int port, int maxConnections, Action onConnectionSuccess, Action onConnectionFailed)
+        {
             var host = new PeerToPeerHost();
+            host._onConnectionFail = onConnectionFailed;
+            host._onConnectionSuccess = onConnectionSuccess;
             host.Init(port, maxConnections);
             return host;
         }
@@ -129,6 +143,13 @@ namespace MonoDragons.Core.Networking
                 Latency = NO_RESPONSE;
                 NoResponseCallback();
             }
+            
+            for (var i = 0; i < _lastConnections.Count() ; i++)
+                if (!Connections.Any((c) => c == _lastConnections[i]))
+                    OnDisconnect(_lastConnections[i]);
+            for (var i = 0; i < Connections.Count(); i++)
+                if (!_lastConnections.Any((c) => c == Connections[i]))
+                    OnConnect(Connections[i]);
         }
         
         public void Send(byte[] bytes)
