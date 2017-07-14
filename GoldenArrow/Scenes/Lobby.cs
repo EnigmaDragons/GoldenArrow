@@ -18,16 +18,17 @@ namespace GoldenArrow.Scenes
     {
         private readonly Func<string> _getAddress;
 
-        private string _players;
+        private string _players = "";
 
-        public Lobby(MyIP ip, string port) :
-            this(() => ip.CachedIPAddress.HasValue ? $"Host: {ip.CachedIPAddress.Value}:{port}" : "Resolving Host Address...") {}
+        public Lobby(MyIP ip, string port, string player) :
+            this(() => ip.CachedIPAddress.HasValue ? $"Host: {ip.CachedIPAddress.Value}:{port}" : "Resolving Host Address...", player) {}
 
-        public Lobby(string ip, string port) : 
-            this(() => $"Host: {ip}:{port}") {}
+        public Lobby(string ip, string port, string player) : 
+            this(() => $"Host: {ip}:{port}", player) {}
 
-        public Lobby(Func<string> getAddress)
+        public Lobby(Func<string> getAddress, string player)
         {
+            _players = player;
             _getAddress = getAddress;
             World.Subscribe(EventSubscription.Create<ConnectionFailed>(x => Leave(), this));
             World.Subscribe(EventSubscription.Create<PlayerConnected>(x => _players = $"{_players}\n{x.Name}", this));

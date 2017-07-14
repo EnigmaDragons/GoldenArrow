@@ -21,13 +21,13 @@ namespace GoldenArrow.Scenes
             yield return UIFactory.CreateButton(new Vector2(700, 600), "Go", () =>
             {
                 var connection = PeerToPeerHost.CreateConnected(int.Parse(port.Get<TypingInput>().Value), 3,
-                    () => Messenger.SendMessage(new PlayerConnected { Name = name.Get<TypingInput>().Value }),
+                    x => Messenger.SendMessage(new PlayerConnected { Name = name.Get<TypingInput>().Value, Id = x.UniqueIdentifier }),
                     () => World.Publish(new ConnectionFailed()));
-                connection.OnDisconnect = x => Messenger.SendMessage(new PlayerDisconnected());
+                connection.OnDisconnect = x => Messenger.SendMessage(new PlayerDisconnected { });
                 new Messenger(connection);
                 var myIp = new MyIP();
                 myIp.StartGetIPAddress();
-                NavigateToScene(new Lobby(myIp, port.Get<TypingInput>().Value));
+                NavigateToScene(new Lobby(myIp, port.Get<TypingInput>().Value, name.Get<TypingInput>().Value));
             });
         }
     }

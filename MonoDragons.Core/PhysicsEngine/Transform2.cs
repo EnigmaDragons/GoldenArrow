@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace MonoDragons.Core.PhysicsEngine
 {
@@ -58,6 +59,15 @@ namespace MonoDragons.Core.PhysicsEngine
             set { Location = new Vector2(value.X - (Size.Width / 2f), value.Y - (Size.Height / 2f)); }
         }
 
+        public void SetTo(Transform2 other)
+        {
+            Location = other.Location;
+            Rotation = other.Rotation;
+            Size = other.Size;
+            Scale = other.Scale;
+            ZIndex = other.ZIndex;
+        }
+
         public bool Intersects(Point point)
         {
             return ToRectangle().Contains(point);
@@ -106,6 +116,17 @@ namespace MonoDragons.Core.PhysicsEngine
         public static Transform2 operator +(Transform2 t1, float scale)
         {
             return new Transform2(t1.Location, t1.Rotation, t1.Size, t1.Scale * scale);
+        }
+
+        public static Transform2 Lerp(Transform2 t1, Transform2 t2, float amount)
+        {
+            return new Transform2(
+                Vector2.Lerp(t1.Location, t2.Location, amount),
+                Rotation2.Lerp(t1.Rotation, t2.Rotation, amount),
+                Size2.Lerp(t1.Size, t2.Size, amount),
+                MathHelper.Lerp(t1.Scale, t2.Scale, amount),
+                Convert.ToInt32(MathHelper.Lerp(t1.ZIndex, t2.ZIndex, amount)));
+
         }
 
         public Transform2 ToScale(float scale)

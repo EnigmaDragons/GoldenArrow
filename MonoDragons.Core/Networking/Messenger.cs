@@ -5,6 +5,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MonoDragons.Core.Networking
 {
@@ -17,6 +19,7 @@ namespace MonoDragons.Core.Networking
         private List<Message> OutOfOrderMessages = new List<Message>();
         private List<object> UnsentMessages = new List<object>();
         public Optional<bool> ConnectionSuccessful => _networker.ConnectionSuccessful;
+        public long UniqueIdentifier => _networker.UniqueIdentifier;
 
         public Messenger(IMessenger networker)
         {
@@ -27,7 +30,15 @@ namespace MonoDragons.Core.Networking
 
         public static void SendMessage(object item)
         {
-            AppMessenger.Send(item);
+            if (AppMessenger == null)
+                Task.Run(async () =>
+                {
+                    while(AppMessenger == null)
+                        await Task.Delay(100);
+                    AppMessenger.Send(item);
+                });
+            else
+                AppMessenger.Send(item);
         }
 
         public void Send(object item)
