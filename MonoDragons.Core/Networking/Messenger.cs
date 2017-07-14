@@ -38,6 +38,13 @@ namespace MonoDragons.Core.Networking
             }
         }
 
+        public void SendHistory()
+        {
+            if (OutOfOrderMessages.Count == 0 && UnsentMessages.Count == 0)
+                foreach (var message in messageHistory)
+                    _networker.Send(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
+        }
+
         private void ReceivedMessage(byte[] bytesAsJson)
         {
             JObject jObj = JsonConvert.DeserializeObject<JObject>(Encoding.UTF8.GetString(bytesAsJson));
