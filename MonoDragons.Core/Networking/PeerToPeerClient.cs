@@ -52,13 +52,13 @@ namespace MonoDragons.Core.Networking
 
         public static PeerToPeerClient CreateConnected(string url, int port)
         {
-            return CreateConnected(url, port, () => { }, () => { });
+            return CreateConnected(url, port, (a) => { }, () => { });
         }
 
-        public static PeerToPeerClient CreateConnected(string url, int port, Action onConnectionSuccess, Action onConnectionFailed)
+        public static PeerToPeerClient CreateConnected(string url, int port, Action<PeerToPeerClient> onConnectionSuccess, Action onConnectionFailed)
         {
             var client = new PeerToPeerClient();
-            client.OnConnectionSuccess = onConnectionSuccess;
+            client.OnConnectionSuccess = () => onConnectionSuccess(client);
             client.OnConnectionFail = onConnectionFailed;
             client.Init(url, port);
             return client;

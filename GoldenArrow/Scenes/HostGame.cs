@@ -14,7 +14,7 @@ namespace GoldenArrow.Scenes
             var port = UIFactory.CreateTextInput(new Vector2(750, 400), 100, "Port");
             yield return port;
             yield return UIFactory.CreateButton(new Vector2(700, 500), "Go",
-                () => { var messenger = new Messenger(PeerToPeerHost.CreateConnected(int.Parse(port.Get<TypingInput>().Value), 3, () => { }, () => { }));
+                () => { var messenger = new Messenger(PeerToPeerHost.CreateConnected(int.Parse(port.Get<TypingInput>().Value), 3, (a) => { }, () => { }));
                     NavigateToScene(new Lobby(messenger)); });
         }
     }

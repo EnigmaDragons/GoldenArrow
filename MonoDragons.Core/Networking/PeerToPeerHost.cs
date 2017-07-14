@@ -62,14 +62,15 @@ namespace MonoDragons.Core.Networking
 
         public static PeerToPeerHost CreateConnected(int port, int maxConnections)
         {
-            return CreateConnected(port, maxConnections, () => { }, () => { });
+            return CreateConnected(port, maxConnections, (a) => { }, () => { });
         }
 
-        public static PeerToPeerHost CreateConnected(int port, int maxConnections, Action onConnectionSuccess, Action onConnectionFailed)
+        public static PeerToPeerHost CreateConnected(int port, int maxConnections, Action<PeerToPeerHost> onConnectionSuccess,
+            Action onConnectionFailed)
         {
             var host = new PeerToPeerHost();
             host.OnConnectionFail = onConnectionFailed;
-            host.OnConnectionSuccess = onConnectionSuccess;
+            host.OnConnectionSuccess = () => onConnectionSuccess(host);
             host.Init(port, maxConnections);
             return host;
         }

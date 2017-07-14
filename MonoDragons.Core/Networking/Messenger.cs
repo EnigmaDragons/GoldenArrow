@@ -10,8 +10,6 @@ namespace MonoDragons.Core.Networking
 {
     public class Messenger : IDisposable
     {
-        public static Messenger AppMessenger;
-
         private IMessenger _networker;
         private List<Message> messageHistory = new List<Message>();
         private List<Message> OutOfOrderMessages = new List<Message>();
@@ -19,11 +17,33 @@ namespace MonoDragons.Core.Networking
         public Optional<bool> ConnectionSuccessful => _networker.ConnectionSuccessful;
         public long UniqueIdentifier => _networker.UniqueIdentifier;
 
+        private Messenger() { }
+
         public Messenger(IMessenger networker)
         {
             _networker = networker;
             _networker.ReceivedCallback = ReceivedMessage;
-            AppMessenger = this;
+        }
+
+        public Messenger CreateClient(string url, int port, Action<Messenger, PeerToPeerClient> onConnectionSuccess,
+            Action<Messenger> onConnectionFailed)
+        {
+            var messenger = new Messenger();
+            var client = PeerToPeerClient.CreateConnected(url, port, (c) => onConnectionSuccess(messenger, c), () => onConnectionFailed(messenger));
+            messenger._networker = client;
+            client.ReceivedCallback = messenger.ReceivedMessage;
+            return messenger;
+        }
+        
+        public Messenger CreateHost(int port, int maxConnections, Action<Messenger, PeerToPeerHost> onConnectionSuccess,
+            Action<Messenger> onConnectionFailed)
+        {
+            var messenger = new Messenger();
+            var client = PeerToPeerHost.CreateConnected(port, maxConnections, (h) => onConnectionSuccess(messenger, h),
+                () => onConnectionFailed(messenger));
+            messenger._networker = client;
+            client.ReceivedCallback = messenger.ReceivedMessage;
+            return messenger;
         }
 
         public void Send(object item)
