@@ -21,14 +21,14 @@ namespace GoldenArrow.Scenes
             var name = UIFactory.CreateTextInput(new Vector2(650, 500), 300, "Name");
             yield return name;
             yield return UIFactory.CreateButton(new Vector2(550, 600), "Cancel", () => NavigateToScene("Setup"));
-            yield return UIFactory.CreateButton(new Vector2(850, 600), "Go", () =>
-            {
-                var connection = PeerToPeerClient.CreateConnected(ipAddress.Get<TypingInput>().Value, int.Parse(port.Get<TypingInput>().Value), 
-                    x => Messenger.SendMessage(new PlayerConnected { Name = name.Get<TypingInput>().Value, Id = x.UniqueIdentifier }), 
-                    () => World.Publish(new ConnectionFailed()));
-                new Messenger(connection);
-                NavigateToScene(new Lobby(ipAddress.Get<TypingInput>().Value, port.Get<TypingInput>().Value, name.Get<TypingInput>().Value));
-            });
+            //have to comment out this stuff
+            //yield return UIFactory.CreateButton(new Vector2(850, 600), "Go", () =>
+            //{
+            //    var messenger = Messenger.CreateClient(ipAddress.Get<TypingInput>().Value, int.Parse(port.Get<TypingInput>().Value), 
+            //        (m, c) => m.Send(new PlayerConnected { Name = name.Get<TypingInput>().Value, Id = c.UniqueIdentifier }),
+            //        (x) => World.Publish(new ConnectionFailed()));
+            //    NavigateToScene(new Lobby(ipAddress.Get<TypingInput>().Value, port.Get<TypingInput>().Value, name.Get<TypingInput>().Value));
+            //});
         }
     }
 }

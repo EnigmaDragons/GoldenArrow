@@ -47,7 +47,7 @@ namespace GoldenArrow.Scenes
 
         private void Leave()
         {
-            Messenger.AppMessenger.Dispose();
+            //Messenger.AppMessenger.Dispose();
             NavigateToScene("Setup");
         } 
     }

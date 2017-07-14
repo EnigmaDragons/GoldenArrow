@@ -18,17 +18,20 @@ namespace GoldenArrow.Scenes
             yield return port;
             var name = UIFactory.CreateTextInput(new Vector2(650, 500), 300, "Name");
             yield return name;
-            yield return UIFactory.CreateButton(new Vector2(700, 600), "Go", () =>
-            {
-                var connection = PeerToPeerHost.CreateConnected(int.Parse(port.Get<TypingInput>().Value), 3,
-                    x => Messenger.SendMessage(new PlayerConnected { Name = name.Get<TypingInput>().Value, Id = x.UniqueIdentifier }),
-                    () => World.Publish(new ConnectionFailed()));
-                connection.OnDisconnect = x => Messenger.SendMessage(new PlayerDisconnected { });
-                new Messenger(connection);
-                var myIp = new MyIP();
-                myIp.StartGetIPAddress();
-                NavigateToScene(new Lobby(myIp, port.Get<TypingInput>().Value, name.Get<TypingInput>().Value));
-            });
+            //I was forced to comment out this stuffes
+            //yield return UIFactory.CreateButton(new Vector2(700, 600), "Go", () =>
+            //{
+            //    var connection = PeerToPeerHost.CreateConnected(int.Parse(port.Get<TypingInput>().Value), 3,
+            //        x => Messenger.SendMessage(new PlayerConnected { Name = name.Get<TypingInput>().Value, Id = x.UniqueIdentifier }),
+            //        () => World.Publish(new ConnectionFailed()));
+            //    connection.OnDisconnect = x => Messenger.SendMessage(new PlayerDisconnected { });
+            //    new Messenger(connection);
+            //    var messenger = Messenger.Cr
+
+            //    var myIp = new MyIP();
+            //    myIp.StartGetIPAddress();
+            //    NavigateToScene(new Lobby(myIp, port.Get<TypingInput>().Value, name.Get<TypingInput>().Value));
+            //});
         }
     }
 }
