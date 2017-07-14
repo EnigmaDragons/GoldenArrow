@@ -26,8 +26,6 @@ namespace MonoDragons.Core.Networking
         private bool _awaitingEchoResponse = false;
         private long _pingSent = 0;
         private bool _awaitingPingResponse = false;
-        private Action _onConnectionFail;
-        private Action _onConnectionSuccess;
         private List<long> _lastConnections = new List<long> { };
 
         public LatencyMonitorMethod LatencyMonitor { get; set; }
@@ -40,6 +38,8 @@ namespace MonoDragons.Core.Networking
         public Action<long> OnConnect { private get; set; } = (a) => { };
         public Action<long> OnDisconnect { private get; set; } = (a) => { };
         public Optional<bool> ConnectionSuccessful { get; private set; } = new Optional<bool>();
+        public Action OnConnectionFail { private get; set; }
+        public Action OnConnectionSuccess { private get; set; }
 
         private PeerToPeerHost() { }
 
@@ -54,10 +54,10 @@ namespace MonoDragons.Core.Networking
             catch
             {
                 ConnectionSuccessful = new Optional<bool>(false);
-                _onConnectionFail();
+                OnConnectionFail();
             }
             ConnectionSuccessful = new Optional<bool>(true);
-            _onConnectionSuccess();
+            OnConnectionSuccess();
         }
 
         public static PeerToPeerHost CreateConnected(int port, int maxConnections)
@@ -68,8 +68,8 @@ namespace MonoDragons.Core.Networking
         public static PeerToPeerHost CreateConnected(int port, int maxConnections, Action onConnectionSuccess, Action onConnectionFailed)
         {
             var host = new PeerToPeerHost();
-            host._onConnectionFail = onConnectionFailed;
-            host._onConnectionSuccess = onConnectionSuccess;
+            host.OnConnectionFail = onConnectionFailed;
+            host.OnConnectionSuccess = onConnectionSuccess;
             host.Init(port, maxConnections);
             return host;
         }

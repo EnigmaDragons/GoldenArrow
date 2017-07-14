@@ -25,8 +25,6 @@ namespace MonoDragons.Core.Networking
         private bool _awaitingEchoResponse = false;
         private long _pingSent = 0;
         private bool _awaitingPingResponse = false;
-        private Action _onConnectionFail;
-        private Action _onConnectionSuccess;
         private bool _hasFinishedTryingToConnect = false;
 
         public LatencyMonitorMethod LatencyMonitor { get; set; }
@@ -37,6 +35,8 @@ namespace MonoDragons.Core.Networking
         public long UniqueIdentifier => _client.UniqueIdentifier;
         public Optional<bool> ConnectionSuccessful => _connectionStatus.Status == NetConnectionStatus.Connected ? new Optional<bool>(true)
             : _connectionStatus.Status == NetConnectionStatus.Disconnected ? new Optional<bool>(false) : new Optional<bool>();
+        public Action OnConnectionFail { private get; set; }
+        public Action OnConnectionSuccess { private get; set; }
 
         private PeerToPeerClient()
         {
@@ -58,8 +58,8 @@ namespace MonoDragons.Core.Networking
         public static PeerToPeerClient CreateConnected(string url, int port, Action onConnectionSuccess, Action onConnectionFailed)
         {
             var client = new PeerToPeerClient();
-            client._onConnectionSuccess = onConnectionSuccess;
-            client._onConnectionFail = onConnectionFailed;
+            client.OnConnectionSuccess = onConnectionSuccess;
+            client.OnConnectionFail = onConnectionFailed;
             client.Init(url, port);
             return client;
         }
@@ -126,7 +126,7 @@ namespace MonoDragons.Core.Networking
             }
 
             if (!_hasFinishedTryingToConnect && ConnectionSuccessful.HasValue)
-                (ConnectionSuccessful.Value ? _onConnectionSuccess : _onConnectionFail)();
+                (ConnectionSuccessful.Value ? OnConnectionSuccess : OnConnectionFail)();
         }
 
         public void Send(byte[] bytes)
