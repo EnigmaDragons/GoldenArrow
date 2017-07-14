@@ -28,7 +28,7 @@ namespace GoldenArrow.Scenes.Demos
                 .Add(card)
                 .Add(card.Sprite)
                 .Add(new Owner {Id = cardOwner})
-                .Add(x => new MouseDrag {CanDrag = () => isCommonOrOwnedByPlayer(x)})
+                .Add(x => new MouseDrag {IsEnabled = () => isCommonOrOwnedByPlayer(x)})
                 .Add(x => new MouseStateActions
                 {
                     IsEnabled = () => isCommonOrOwnedByPlayer(x),

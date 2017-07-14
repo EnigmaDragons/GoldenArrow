@@ -18,9 +18,9 @@ namespace GoldenArrow.Scenes
             yield return port;
             yield return UIFactory.CreateButton(new Vector2(550, 500), "Cancel", () => NavigateToScene("Setup"));
             yield return UIFactory.CreateButton(new Vector2(850, 500), "Go",
-                () => { var messenger = Messenger.CreateClient(ipAddress.Get<TypingInput>().Value, int.Parse(port.Get<TypingInput>().Value),
-                    Rng.Int(1000).ToString());
-                NavigateToScene(new Lobby(messenger)); });
+                () => { var messenger = new Messenger(PeerToPeerClient.CreateConnected(ipAddress.Get<TypingInput>().Value,
+                    int.Parse(port.Get<TypingInput>().Value)));
+                        NavigateToScene(new Lobby(messenger)); });
         }
     }
 }
