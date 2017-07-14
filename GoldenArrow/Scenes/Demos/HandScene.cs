@@ -17,11 +17,11 @@ namespace GoldenArrow.Scenes.Demos
 
         protected override IEnumerable<GameObject> CreateObjs()
         {
-            var obj1 = Create(new Card(new CardData {Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds"}));
-            var obj2 = Create(new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
-            var obj3 = Create(new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
-            var obj4 = Create(new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
-            var obj5 = Create(new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
+            var obj1 = Create(new Card(new CardData {Back = "Images/Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
+            var obj2 = Create(new Card(new CardData { Back = "Images/Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
+            var obj3 = Create(new Card(new CardData { Back = "Images/Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
+            var obj4 = Create(new Card(new CardData { Back = "Images/Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
+            var obj5 = Create(new Card(new CardData { Back = "Images/Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
 
             var hand = new Hand(new HandData { Cards = new List<int> { obj1.Id, obj2.Id, obj3.Id, obj4.Id, obj5.Id } });
             var handTransform = new Transform2(new Size2(0, 0));
@@ -44,7 +44,7 @@ namespace GoldenArrow.Scenes.Demos
             yield return handObj;
             yield return UIFactory.CreateButton(new Vector2(550, 750), "Draw", () =>
             {
-                var obj = Create(new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
+                var obj = Create(new Card(new CardData { Back = "Images/Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" }));
                 _gameObjects.Add(obj);
                 AddObj(obj);
                 hand.Add(obj.Id);

@@ -11,6 +11,13 @@ namespace MonoDragons.Core.Entities
         public int Count => _items.Count;
         public bool IsReadOnly => false;
 
+        public Items() { }
+
+        public Items(IEnumerable<GameObject> items)
+        {
+            _items = items.ToList();
+        }
+
         public IEnumerator<GameObject> GetEnumerator()
         {
             return _items.GetEnumerator();

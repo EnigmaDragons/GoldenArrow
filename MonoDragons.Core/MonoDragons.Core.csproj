@@ -97,6 +97,7 @@
     <Compile Include="Inputs\ControlHandler.cs" />
     <Compile Include="Inputs\DirectionHandler.cs" />
     <Compile Include="IO\AppDataJsonIo.cs" />
+    <Compile Include="IO\JsonIo.cs" />
     <Compile Include="KeyboardControls\KeyboardInput.cs" />
     <Compile Include="KeyboardControls\TypingInput.cs" />
     <Compile Include="MouseControls\MouseClickTarget.cs" />

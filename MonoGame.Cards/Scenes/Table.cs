@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoDragons.Core.Common;
 using MonoDragons.Core.Entities;
@@ -17,10 +18,8 @@ namespace MonoGame.Cards.Scenes
             Entity.Create(new Transform2(new Size2(1920, 1080)))
                 .Add(new Sprite("Images/Table/casino-felt"));
 
-            var cards = new Items();
-            cards.Add(Create(new Card(new CardData {Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds"})));
-            cards.Add(Create(new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" })));
-            cards.Add(Create(new Card(new CardData { Back = "Cards/spiral-back", Front = "Decks/Poker/ace-of-diamonds" })));
+            var deckData = DeckData.LoadFromDir("Content/Decks/Poker");
+            var cards = new Items(deckData.GetAllCards().Select(x => Create(new Card(x))));
 
             var deck = new Deck(cards);
             Entity.Create(new Transform2(new Vector2(200, 200), Sizes.Card))
@@ -28,8 +27,6 @@ namespace MonoGame.Cards.Scenes
                 .Add(deck.Sprite)
                 .Add(new ZGravity())
                 .Add(x => new MouseDropTarget {
-                    OnEnter = () => x.With<Sprite>(s => s.Name = "Images/Cards/wood"),
-                    OnExit = () => x.With<Sprite>(s => s.Name = "Images/Cards/stone"),
                     OnDrop = o => deck.PutFacedownOnTop(o)
                 })
                 .Add(x => new MouseStateActions

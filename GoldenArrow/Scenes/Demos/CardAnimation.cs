@@ -12,7 +12,7 @@ namespace GoldenArrow.Scenes.Demos
     {
         protected override IEnumerable<GameObject> CreateObjs()
         {
-            yield return UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Cards/stone", Back = "Cards/back-basic" }))
+            yield return UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Images/Cards/stone", Back = "Images/Cards/back-basic" }))
                 .Add(new DurationTravel
                 {
                     Duration = TimeSpan.FromMilliseconds(3000),

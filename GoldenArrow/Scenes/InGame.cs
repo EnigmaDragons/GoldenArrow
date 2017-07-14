@@ -22,10 +22,10 @@ namespace GoldenArrow.Scenes
         protected override IEnumerable<GameObject> CreateObjs()
         {
             Items cards = new Items();
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Cards/stone", Back = "Cards/back-basic" }))));
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Cards/gold", Back = "Cards/back-basic" }))));
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Cards/food", Back = "Cards/back-basic" }))));
-            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Cards/wood", Back = "Cards/back-basic" }))));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Images/Cards/stone", Back = "Images/Cards/back-basic" }))));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Images/Cards/gold", Back = "Images/Cards/back-basic" }))));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Images/Cards/food", Back = "Images/Cards/back-basic" }))));
+            cards.AddRange(Enumerable.Range(0, 9).Select(x => UIFactory.CreateCard(new Card(new CardData { Name = "Stone", Front = "Images/Cards/wood", Back = "Images/Cards/back-basic" }))));
             cards.Shuffle();
             var deck = new Deck(cards);
             return CreateTable()
