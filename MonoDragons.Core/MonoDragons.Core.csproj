@@ -55,6 +55,7 @@
     <Compile Include="Audio\SoundsPlayer.cs" />
     <Compile Include="Audio\SoundSystems.cs" />
     <Compile Include="Common\Condition.cs" />
+    <Compile Include="Common\FancyMaths.cs" />
     <Compile Include="Engine\Automation.cs" />
     <Compile Include="Engine\IControl.cs" />
     <Compile Include="Engine\ISpatialVisual.cs" />
