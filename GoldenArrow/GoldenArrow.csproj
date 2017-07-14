@@ -39,10 +39,14 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Events\ConnectionFailed.cs" />
     <Compile Include="Game\DraftPack.cs" />
     <Compile Include="Game\DraftSystem.cs" />
+    <Compile Include="Game\Players.cs" />
     <Compile Include="Game\PlayerState.cs" />
     <Compile Include="Layers.cs" />
+    <Compile Include="NetworkEvents\PlayerConnected.cs" />
+    <Compile Include="NetworkEvents\PlayerDisconnected.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\Demos\CardAnimation.cs" />
@@ -55,8 +59,8 @@
     <Compile Include="Scenes\MainMenu.cs" />
     <Compile Include="Scenes\SetupGame.cs" />
     <Compile Include="Scenes\Lobby.cs" />
-    <Compile Include="Scenes\SilasDemoScene.cs" />
-    <Compile Include="Scenes\TimTestScene.cs" />
+    <Compile Include="Scenes\Demos\SilasDemoScene.cs" />
+    <Compile Include="Scenes\Demos\TimTestScene.cs" />
     <Compile Include="UIFactory.cs" />
   </ItemGroup>
   <ItemGroup>

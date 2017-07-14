@@ -20,11 +20,31 @@ namespace MonoDragons.Core.Entities
 
         public static void WithTopMost<T>(this IEntities entities, Point point, Action<T> action)
         {
+            WithTopMost<T>(entities, point, (_, x) => action(x));
+        }
+
+        public static void WithTopMost<T>(this IEntities entities, Point point, Action<GameObject, T> action)
+        {
             Collect<T>(entities)
                 .Where(o => o.Transform.Intersects(point))
                 .OrderByDescending(o => o.Transform.ZIndex)
                 .FirstAsOptional()
-                .IfPresent(o => o.With(action));
+                .IfPresent(o => o.With<T>(x => action(o, x)));
+        }
+
+        public static void WithTopMost<T>(this IEntities entities, Point point, 
+            Action<GameObject, T> action, Action<GameObject, T> othersAction)
+        {
+            IEnumerable<GameObject> objs = Collect<T>(entities)
+                .OrderByDescending(o => o.Transform.ZIndex);
+            objs.Where(o => o.Transform.Intersects(point))
+                .FirstAsOptional()
+                .IfPresent(o =>
+                {
+                    o.With<T>(x => action(o, x));
+                    objs = objs.Except(o.AsList());
+                });
+            objs.ForEach(o => o.With<T>(x => othersAction(o, x)));
         }
 
         public static void Where<T>(this IEntities entities, Predicate<GameObject> condition, Action<T> action)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoDragons.Core.Common;
 using MonoDragons.Core.Entities;
@@ -27,11 +26,11 @@ namespace MonoGame.Cards.Scenes
             Entity.Create(new Transform2(new Vector2(200, 200), Sizes.Card))
                 .Add(cards)
                 .Add(deck.Sprite)
+                .Add(new ZGravity())
                 .Add(x => new MouseDropTarget {
                     OnEnter = () => x.With<Sprite>(s => s.Name = "Images/Cards/wood"),
                     OnExit = () => x.With<Sprite>(s => s.Name = "Images/Cards/stone"),
                     OnDrop = o => deck.PutFacedownOnTop(o)
-                    
                 })
                 .Add(x => new MouseStateActions
                 {
@@ -48,8 +47,13 @@ namespace MonoGame.Cards.Scenes
             return Entity.Create(new Transform2(Sizes.Card))
                 .Add(card)
                 .Add(card.Sprite)
+                .Add(new ZGravity())
                 .Add(new MouseDrag())
-                .Add(x => new MouseStateActions { OnReleased = () => card.Flip() });
+                .Add(x => new MouseStateActions
+                {
+                    OnPressed = () => x.Transform.ZIndex = 100,
+                    OnReleased = () => card.Flip()
+                });
         }
 
         public void Update(TimeSpan delta)

@@ -3,7 +3,7 @@ namespace MonoDragons.Core.PhysicsEngine
 {
     public sealed class ZGravity
     {
-        public float Acceleration { get; set; } = 1.0f;
-        public bool Active { get; set; } = true;
+        public int Acceleration { get; set; } = 10;
+        public bool IsEnabled { get; set; } = true;
     }
 }

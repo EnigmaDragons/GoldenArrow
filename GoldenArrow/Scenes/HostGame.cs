@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using GoldenArrow.Events;
+using GoldenArrow.NetworkEvents;
 using Microsoft.Xna.Framework;
+using MonoDragons.Core.Engine;
 using MonoDragons.Core.Entities;
 using MonoDragons.Core.Scenes;
 using MonoDragons.Core.Networking;
@@ -13,9 +16,19 @@ namespace GoldenArrow.Scenes
         {
             var port = UIFactory.CreateTextInput(new Vector2(750, 400), 100, "Port");
             yield return port;
-            yield return UIFactory.CreateButton(new Vector2(700, 500), "Go",
-                () => { var messenger = Messenger.CreateHost(int.Parse(port.Get<TypingInput>().Value), "Host", 3);
-                    NavigateToScene(new Lobby(messenger)); });
+            var name = UIFactory.CreateTextInput(new Vector2(650, 500), 300, "Name");
+            yield return name;
+            yield return UIFactory.CreateButton(new Vector2(700, 600), "Go", () =>
+            {
+                var connection = PeerToPeerHost.CreateConnected(int.Parse(port.Get<TypingInput>().Value), 3,
+                    () => Messenger.SendMessage(new PlayerConnected { Name = name.Get<TypingInput>().Value }),
+                    () => World.Publish(new ConnectionFailed()));
+                connection.OnDisconnect = x => Messenger.SendMessage(new PlayerDisconnected());
+                new Messenger(connection);
+                var myIp = new MyIP();
+                myIp.StartGetIPAddress();
+                NavigateToScene(new Lobby(myIp, port.Get<TypingInput>().Value));
+            });
         }
     }
 }

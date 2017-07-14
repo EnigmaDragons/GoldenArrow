@@ -1,155 +1,174 @@
 ﻿using System.Collections.Generic;
 using Lidgren.Network;
-using Newtonsoft.Json;
 using System.Threading;
-using System.Collections.Concurrent;
 using System.Linq;
 using System;
 using MonoDragons.Core.Common;
+using MonoDragons.Core.Engine;
 
 namespace MonoDragons.Core.Networking
 {
-    public class PeerToPeerHost : INetworker
+    public class PeerToPeerHost : IMessenger, ILatencyMonitor, IAutomaton
     {
-        private const string ConnectionDenoter = "C";
-        private const string NormalDenoter = " ";
-        private const string ToEchoDenoter = "E";
-        private const string EchoedDenoter = "e";
+        private const byte NormalDenoter = 0;
+        private const byte PingDenoter = 1;
+        private const byte PongDenoter = 2;
+        private const byte ToEchoDenoter = 3;
+        private const byte EchoedDenoter = 4;
+
+        public const long NOT_TESTED = -2;
+        public const long NO_RESPONSE = -1;
 
         private NetPeerConfiguration _config { get { return _server.Configuration; } }
+        private long _now => DateTimeOffset.UtcNow.Ticks;
         private NetServer _server;
-        private long _sent;
-        private bool _disposed = false;
-        private Dictionary<long, string> _connectionIDToName = new Dictionary<long, string>();
+        private long _toEchoSent = 0;
+        private bool _awaitingEchoResponse = false;
+        private long _pingSent = 0;
+        private bool _awaitingPingResponse = false;
+        private Action _onConnectionFail;
+        private Action _onConnectionSuccess;
+        private List<long> _lastConnections = new List<long> { };
 
-        public Action<string> ReceivedCallback { get; set; } = (s) => { };
-        public int ConnectionsCount => _server.ConnectionsCount;
-        public List<string> ConnectionNames => _server.Connections.Select((c) =>  _connectionIDToName[c.RemoteUniqueIdentifier]).ToList();
-        public string YourName { get; private set; }
-        public bool IsFull => _config.MaximumConnections == _server.ConnectionsCount;
-        public long Latency { get; private set; } = -2;
-        public Optional<bool> Successful { get; private set; } = new Optional<bool>();
+        public LatencyMonitorMethod LatencyMonitor { get; set; }
+        public int PingEveryMillis { get; set; } = 1000;
+        public long Latency { get; private set; } = NOT_TESTED;
+        public Action NoResponseCallback { private get; set; } = () => { };
+        public Action<byte[]> ReceivedCallback { private get; set; } = (s) => { };
+        public List<long> Connections => _server.Connections.Select((c) => c.RemoteUniqueIdentifier).ToList();
+        public Action<long> OnConnect { private get; set; } = (a) => { };
+        public Action<long> OnDisconnect { private get; set; } = (a) => { };
+        public Optional<bool> ConnectionSuccessful { get; private set; } = new Optional<bool>();
 
-        public void Init(int port, string name, int maxConnections)
+        private PeerToPeerHost() { }
+
+        private void Init(int port, int maxConnections)
         {
-            YourName = name;
             _server = new NetServer(new NetPeerConfiguration("chat") { Port = port, MaximumConnections = maxConnections });
-            _config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            _server.RegisterReceivedCallback(new SendOrPostCallback((a) => GetNewMessages()));
             try
             {
                 _server.Start();
             }
             catch
             {
-                Successful = new Optional<bool>(false);
+                ConnectionSuccessful = new Optional<bool>(false);
+                _onConnectionFail();
             }
-            Successful = new Optional<bool>(true);
-            _connectionIDToName.Add(_server.UniqueIdentifier, name);
-            _server.RegisterReceivedCallback(new SendOrPostCallback((a) => GetNewMessages()));
-            var t = new Thread(new ThreadStart(ConnectionTracker));
-            t.Start();
+            ConnectionSuccessful = new Optional<bool>(true);
+            _onConnectionSuccess();
+        }
+
+        public static PeerToPeerHost CreateConnected(int port, int maxConnections)
+        {
+            return CreateConnected(port, maxConnections, () => { }, () => { });
+        }
+
+        public static PeerToPeerHost CreateConnected(int port, int maxConnections, Action onConnectionSuccess, Action onConnectionFailed)
+        {
+            var host = new PeerToPeerHost();
+            host._onConnectionFail = onConnectionFailed;
+            host._onConnectionSuccess = onConnectionSuccess;
+            host.Init(port, maxConnections);
+            return host;
         }
 
         private void GetNewMessages()
         {
-            NetIncomingMessage im;
-            while ((im = _server.ReadMessage()) != null)
+            NetIncomingMessage inMessage;
+            while ((inMessage = _server.ReadMessage()) != null)
             {
-                if (im.MessageType == NetIncomingMessageType.ConnectionApproval)
+                if (inMessage.MessageType == NetIncomingMessageType.Data)
                 {
-                    string s = im.ReadString();
-                    if (!_connectionIDToName.ContainsValue(s))
+                    var s = inMessage.ReadBytes(inMessage.LengthBytes);
+                    if (s[0] == PingDenoter)
                     {
-                        _connectionIDToName.Add(im.SenderConnection.RemoteUniqueIdentifier, s);
-                        im.SenderConnection.Approve();
+                        SendMessage(new[] { PongDenoter }, new List<NetConnection>() { inMessage.SenderConnection });
                     }
-                    else if (_connectionIDToName.ContainsKey(im.SenderConnection.RemoteUniqueIdentifier)
-                        && _connectionIDToName[im.SenderConnection.RemoteUniqueIdentifier] == s)
-                            im.SenderConnection.Approve();
-                    else
-                        im.SenderConnection.Deny();
-
-                }
-                else if (im.MessageType == NetIncomingMessageType.StatusChanged && (NetConnectionStatus)im.ReadByte() == NetConnectionStatus.Connected)
-                {
-                    SendNewMessage(GetConnectionMessage(), new List<NetConnection> { im.SenderConnection });
-                }
-                else if (im.MessageType == NetIncomingMessageType.DebugMessage)
-                {
-                    var x = im.ReadString();
-                }
-                else if (im.MessageType == NetIncomingMessageType.Data)
-                {
-                    var s = im.ReadString();
-                    if (s.Substring(0, 1) == ToEchoDenoter)
+                    else if (s[0] == PongDenoter)
                     {
-                        RelayAndRespondToMessage(im, s);
-                        SendNewMessage(EchoedDenoter + s.Substring(1), new List<NetConnection>() { im.SenderConnection });
+                        Latency = _now - _pingSent;
+                        _awaitingPingResponse = false;
                     }
-                    else if (s.Substring(0, 1) == NormalDenoter)
-                        RelayAndRespondToMessage(im, s);
-                    else if (s.Substring(0, 1) == EchoedDenoter)
+                    else if (s[0] == ToEchoDenoter)
                     {
-                        if(Latency == -1)
-                            Latency = DateTimeOffset.UtcNow.Ticks - _sent;
+                        SendMessage(new[] { EchoedDenoter }, new List<NetConnection>() { inMessage.SenderConnection });
+                        RelayAndRespondToMessage(inMessage, s);
+                    }
+                    else if (s[0] == EchoedDenoter)
+                    {
+                        Latency = _now - _toEchoSent;
+                        _awaitingEchoResponse = false;
+                    }
+                    else if (s[0] == NormalDenoter)
+                    {
+                        RelayAndRespondToMessage(inMessage, s);
                     }
                 }
-                _server.Recycle(im);
+                _server.Recycle(inMessage);
             }
         }
-
-        private string GetConnectionMessage()
-        {
-            return ConnectionDenoter + _config.MaximumConnections + "\"" + String.Join("\"", ConnectionNames) + "\"" + YourName;
-        }
-
-        private void RelayAndRespondToMessage(NetIncomingMessage im, string s)
+        
+        private void RelayAndRespondToMessage(NetIncomingMessage im, byte[] s)
         {
             List<NetConnection> all = _server.Connections;
             all.Remove(im.SenderConnection);
-            SendNewMessage(NormalDenoter + s.Substring(1), all);
-            ReceivedCallback(s.Substring(1));
+            SendMessage(new byte[] { NormalDenoter }.Concat(s.Skip(1)), all);
+            ReceivedCallback(s.Skip(1).ToArray());
         }
-
-        private void SendNewMessage(string text, List<NetConnection> connections)
+        
+        private void SendMessage(IEnumerable<byte> bytes, List<NetConnection> connections)
         {
             if (connections.Count > 0)
             {
-                NetOutgoingMessage message = _server.CreateMessage(text);
+                NetOutgoingMessage message = _server.CreateMessage();
+                message.Write(bytes.ToArray());
                 _server.SendMessage(message, connections, NetDeliveryMethod.ReliableOrdered, 0);
             }
         }
 
-        public void Send(object item)
+        public void Update(TimeSpan delta)
         {
-            NetOutgoingMessage om = _server.CreateMessage(ToEchoDenoter + JsonConvert.SerializeObject(item));
-            List<NetConnection> all = _server.Connections;
-            if (all.Count > 0)
+            if (LatencyMonitor.HasFlag(LatencyMonitorMethod.Ping) && !_awaitingPingResponse && !_awaitingEchoResponse
+                    && _now >= _pingSent + PingEveryMillis * TimeSpan.TicksPerMillisecond)
             {
-                Latency = -1;
-                _sent = DateTimeOffset.UtcNow.Ticks;
-                _server.SendMessage(om, all, NetDeliveryMethod.ReliableOrdered, 0);
+                _awaitingPingResponse = true;
+                _pingSent = _now;
+                SendMessage(new[] { PingDenoter }, _server.Connections);
             }
-        }
 
-        private void ConnectionTracker()
-        {
-            var lastConnectionCount = 0;
-            while (!_disposed)
+            if (_awaitingEchoResponse && _now >= _toEchoSent + 5 * TimeSpan.TicksPerSecond
+                || _awaitingPingResponse && _now >= _pingSent + 5 * TimeSpan.TicksPerSecond)
             {
-                if(lastConnectionCount != ConnectionsCount)
-                {
-                    SendNewMessage(GetConnectionMessage(), _server.Connections);
-                    lastConnectionCount = ConnectionsCount;
-                }
-                Thread.Sleep(10);
+                Latency = NO_RESPONSE;
+                NoResponseCallback();
             }
+            
+            for (var i = 0; i < _lastConnections.Count() ; i++)
+                if (!Connections.Any((c) => c == _lastConnections[i]))
+                    OnDisconnect(_lastConnections[i]);
+            for (var i = 0; i < Connections.Count(); i++)
+                if (!_lastConnections.Any((c) => c == Connections[i]))
+                    OnConnect(Connections[i]);
+        }
+        
+        public void Send(byte[] bytes)
+        {
+            List<NetConnection> all = _server.Connections;
+            if (LatencyMonitor.HasFlag(LatencyMonitorMethod.Echo))
+            {
+                var randomConnection = all.Random();
+                all.RemoveAll((c) => c.RemoteUniqueIdentifier == randomConnection.RemoteUniqueIdentifier);
+                _awaitingEchoResponse = true;
+                _toEchoSent = _now;
+                SendMessage(new[] { ToEchoDenoter }.Concat(bytes), new List<NetConnection>() { randomConnection });
+            }
+            SendMessage(new[] { NormalDenoter }.Concat(bytes), all);
         }
 
         public void Dispose()
         {
             _server.Shutdown("Server Shutdown");
-            _disposed = true;
         }
     }
 }
