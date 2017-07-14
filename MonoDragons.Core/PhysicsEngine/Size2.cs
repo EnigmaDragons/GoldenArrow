@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace MonoDragons.Core.PhysicsEngine
 {
@@ -48,6 +49,13 @@ namespace MonoDragons.Core.PhysicsEngine
         public static Size2 operator /(Size2 size, float scale)
         {
             return new Size2((int)(size.Width / scale), (int)(size.Height / scale));
+        }
+
+        public static Size2 Lerp(Size2 s1, Size2 s2, float amount)
+        {
+            return new Size2(
+                Convert.ToInt32(MathHelper.Lerp(s1.Width, s2.Width, amount)),
+                Convert.ToInt32(MathHelper.Lerp(s1.Height, s2.Height, amount)));
         }
     }
 }
