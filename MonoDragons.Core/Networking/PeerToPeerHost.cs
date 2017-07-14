@@ -35,6 +35,7 @@ namespace MonoDragons.Core.Networking
         public long Latency { get; private set; } = NOT_TESTED;
         public Action NoResponseCallback { private get; set; } = () => { };
         public Action<byte[]> ReceivedCallback { private get; set; } = (s) => { };
+        public long UniqueIdentifier => _server.UniqueIdentifier;
         public List<long> Connections => _server.Connections.Select((c) => c.RemoteUniqueIdentifier).ToList();
         public Action<long> OnConnect { private get; set; } = (a) => { };
         public Action<long> OnDisconnect { private get; set; } = (a) => { };

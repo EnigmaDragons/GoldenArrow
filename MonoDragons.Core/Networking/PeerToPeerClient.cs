@@ -34,6 +34,7 @@ namespace MonoDragons.Core.Networking
         public long Latency { get; private set; } = NOT_TESTED;
         public Action NoResponseCallback { private get; set; } = () => { };
         public Action<byte[]> ReceivedCallback { private get; set; } = (s) => { };
+        public long UniqueIdentifier => _client.UniqueIdentifier;
         public Optional<bool> ConnectionSuccessful => _connectionStatus.Status == NetConnectionStatus.Connected ? new Optional<bool>(true)
             : _connectionStatus.Status == NetConnectionStatus.Disconnected ? new Optional<bool>(false) : new Optional<bool>();
 

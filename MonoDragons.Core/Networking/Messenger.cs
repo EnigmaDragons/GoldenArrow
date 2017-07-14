@@ -17,6 +17,7 @@ namespace MonoDragons.Core.Networking
         private List<Message> OutOfOrderMessages = new List<Message>();
         private List<object> UnsentMessages = new List<object>();
         public Optional<bool> ConnectionSuccessful => _networker.ConnectionSuccessful;
+        public long UniqueIdentifier => _networker.UniqueIdentifier;
 
         public Messenger(IMessenger networker)
         {
