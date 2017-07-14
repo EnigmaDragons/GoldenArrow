@@ -55,12 +55,14 @@
     <Compile Include="Audio\SoundsPlayer.cs" />
     <Compile Include="Audio\SoundSystems.cs" />
     <Compile Include="Common\Condition.cs" />
+    <Compile Include="Common\FancyMaths.cs" />
     <Compile Include="Engine\Automation.cs" />
     <Compile Include="Engine\IControl.cs" />
     <Compile Include="Engine\ISpatialVisual.cs" />
     <Compile Include="Engine\ISpatialVisualControl.cs" />
     <Compile Include="Engine\IVisualControl.cs" />
     <Compile Include="Entities\EntitiesExtensions.cs" />
+    <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\Items.cs" />
     <Compile Include="Graphics\CachingRules.cs" />
     <Compile Include="Graphics\RectangleBorderTexture.cs" />

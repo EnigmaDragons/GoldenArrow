@@ -1,27 +1,23 @@
-﻿using MonoDragons.Core.Common;
+﻿using System.Collections.Generic;
+using MonoDragons.Core.Common;
 using MonoDragons.Core.Entities;
 using MonoDragons.Core.MouseControls;
+using MonoDragons.Core.PhysicsEngine;
 
 namespace GoldenArrow.Game
 {
     public class DraftPack
     {
-        private readonly Items _cards;
+        private readonly List<GameObject> _shadowCards = new List<GameObject>();
 
         public bool IsCardHovered { get; set; }
         public GameObject HoveredCard { get; set; }
         public bool IsCardSelected { get; set; }
         public GameObject SelectedCard { get; set; }
 
-        public DraftPack(Items cards)
+        public DraftPack(Items cards, Transform2 transform)
         {
-            _cards = cards;
-            _cards.ForEach(x => x.Add(new MouseStateActions
-            {
-                OnHover = () => HoverCard(x),
-                OnPressed = () => SelectCard(x),
-                OnExit = () => ExitCard(x)
-            }));
+            
         }
 
         private void HoverCard(GameObject card)

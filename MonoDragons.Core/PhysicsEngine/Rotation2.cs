@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using MonoDragons.Core.Inputs;
 
 namespace MonoDragons.Core.PhysicsEngine
@@ -20,7 +21,7 @@ namespace MonoDragons.Core.PhysicsEngine
 
         public Rotation2(float value)
         {
-            Value = value;
+            Value = value % 360;
         }
 
         public override bool Equals(object obj)
@@ -59,6 +60,19 @@ namespace MonoDragons.Core.PhysicsEngine
             if (270 < Value || Value < 90)
                 vDir = VerticalDirection.Up;
             return new Direction(hDir, vDir);
+        }
+
+        public static float Difference(Rotation2 r1, Rotation2 r2)
+        {
+            var higher = Math.Max(r1.Value, r2.Value);
+            var lower = Math.Min(r1.Value, r2.Value);
+            return higher - lower;
+        }
+
+        public static Rotation2 Lerp(Rotation2 r1, Rotation2 r2, float amount)
+        {
+            var degrees = Difference(r1, r2);
+            return new Rotation2(r1.Value + (amount * degrees));
         }
     }
 }
